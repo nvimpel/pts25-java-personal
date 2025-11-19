@@ -5,7 +5,7 @@ import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 import java.util.Optional;
 import java.util.List;
 
-class Grid {
+public class Grid {
     public Optional<Card> getCard(GridPosition coordinate) {
         return Optional.empty();
     }

@@ -1,6 +1,7 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
 import sk.uniba.fmph.dcs.terra_futura.enums.*;
+import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
 import java.util.List;
 

@@ -1,5 +1,5 @@
-package sk.uniba.fmph.dcs.terra_futura;
+package sk.uniba.fmph.dcs.terra_futura.interfaces;
 
-interface TerraFuturaObserverInterface {
+public interface TerraFuturaObserverInterface {
     void notify(String gameState);
 }

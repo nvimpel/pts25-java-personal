@@ -1,8 +1,10 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
 import java.util.List;
+import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
+import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
-class Card {
+public class Card {
     private List<Resource> resources;
     private int pollutionSpaces;
     private Effect upperEffect;
