@@ -18,19 +18,19 @@ class TerraFuturaComponent implements TerraFuturaInterface {
     }
 
     @Override
-    public boolean activateCard(int playerId, int card, GridPosition inputs, java.util.List<Pair<Resource, GridPosition>> outputs,
-                                java.util.List<GridPosition> pollution) {
+    public boolean activateCard(int playerId, int card, GridPosition inputs,
+            java.util.List<Pair<Resource, GridPosition>> outputs,
+            java.util.List<GridPosition> pollution) {
         return false;
     }
 
     @Override
     public boolean activateCard(Player player, Card card, Grid grid,
-                                 java.util.List<Pair<Resource, GridPosition>> outputs,
-                                 java.util.List<GridPosition> pollution,
-                                 Player otherPlayer, java.util.Optional<GridPosition> otherPos) {
+            java.util.List<Pair<Resource, GridPosition>> outputs,
+            java.util.List<GridPosition> pollution,
+            Player otherPlayer, java.util.Optional<GridPosition> otherPos) {
         return false;
     }
-
 
     @Override
     public boolean selectReward(int playerId, Resource resource) {
@@ -53,4 +53,3 @@ class TerraFuturaComponent implements TerraFuturaInterface {
         return false;
     }
 }
-

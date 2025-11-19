@@ -5,10 +5,18 @@ import java.util.Optional;
 class Pile {
     java.util.List<Card> cards;
 
+    Card getCard(int index) {
+        return null;
+    }
 
-    Card getCard(int index) { return null; }
+    Optional<Card> takeCard(int index) {
+        return Optional.empty();
+    }
 
-    Optional<Card> takeCard(int index) { return Optional.empty(); }
-    void removeLastCard() {}
-    String state() { return ""; }
+    void removeLastCard() {
+    }
+
+    String state() {
+        return "";
+    }
 }
