@@ -1,5 +1,7 @@
 package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
@@ -41,6 +43,17 @@ public final class ArbitraryBasic implements Effect {
 
     @Override
     public String state() {
-        return null;
+        JSONObject json = new JSONObject();
+        JSONArray arr = new JSONArray();
+
+        for (Resource r : to) {
+            arr.put(r.toString());
+        }
+
+        json.put("type", "ArbitraryBasic");
+        json.put("generates", arr);
+
+        return json.toString();
     }
+
 }

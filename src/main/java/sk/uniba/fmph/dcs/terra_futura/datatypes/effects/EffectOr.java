@@ -1,5 +1,7 @@
 package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
@@ -39,7 +41,17 @@ public final class EffectOr implements Effect {
 
     @Override
     public String state() {
-        return null;
+        JSONObject json = new JSONObject();
+        JSONArray children = new JSONArray();
+
+        for (Effect effect : this.effects) {
+            children.put(new JSONObject(effect.state()));
+        }
+
+        json.put("type", "EffectOr");
+        json.put("effects", children);
+
+        return json.toString();
     }
 
 

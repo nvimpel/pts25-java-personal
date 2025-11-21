@@ -1,5 +1,7 @@
 package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
@@ -51,7 +53,24 @@ public final class TransformationFixed implements Effect {
 
     @Override
     public String state() {
-        return null;
+        JSONObject json = new JSONObject();
+        JSONArray arrFrom = new JSONArray();
+        JSONArray arrTo = new JSONArray();
+
+        for (Resource r : to) {
+            arrFrom.put(r.toString());
+        }
+
+        for (Resource r : to) {
+            arrTo.put(r.toString());
+        }
+
+        json.put("type", "TransformationFixed");
+        json.put("transformsFrom", arrFrom);
+        json.put("transformsTo", arrTo);
+        json.put("pollution", pollution);
+
+        return json.toString();
     }
 
 }
