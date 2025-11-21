@@ -3,9 +3,16 @@ package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * Implementácia efektu, ktory iba generuje suroviny.
+ * Generovat moze iba jednu naraz, ale moze mat viacero surovin ktore vie generovat
+ * {@code check} skontroluje ci generovana surovina sa presne zhoduje s nejakou ktoru dany efekt vie generovat.
+ * Ak je v outpute viac ako jedna surovina  {@return false}
+ * Input a pollution musia byt prazdne respektive nulove
+ *
+ **/
 public final class ArbitraryBasic implements Effect {
     private final List<Resource> to;
 
@@ -15,13 +22,16 @@ public final class ArbitraryBasic implements Effect {
 
     @Override
     public boolean check(final List<Resource> input, final List<Resource> output, final int pollution) {
-        for (Resource r : output) {
-            if (Collections.frequency(to, r) != Collections.frequency(output, r)) {
-                return false;
-            }
+        if (pollution != 0) {
+            return false;
         }
-
-        return pollution == 0;
+        if (!input.isEmpty()) {
+            return false;
+        }
+        if (output.size() != 1) {
+            return false;
+        }
+        return to.contains(output.getFirst());
     }
 
     @Override
