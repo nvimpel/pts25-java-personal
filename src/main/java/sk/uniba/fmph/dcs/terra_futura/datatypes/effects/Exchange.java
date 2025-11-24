@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +23,18 @@ public final class Exchange implements Effect {
     private final List<Resource> to;
 
     public Exchange(final List<Resource> from, final List<Resource> to) {
-        this.from = from;
-        this.to = to;
+        if (from == null || to == null) {
+            throw new IllegalArgumentException("from and to may not be null");
+        }
+        this.from = new ArrayList<>(from);
+        this.to = new ArrayList<>(to);
     }
 
     @Override
     public boolean check(final List<Resource> input, final List<Resource> output, final int pollution) {
+        if (input == null || output == null) {
+            throw new IllegalArgumentException("input and output may not be null");
+        }
         if (input.size() != 1) {
             return false;
         }
@@ -35,6 +42,9 @@ public final class Exchange implements Effect {
             return false;
         }
         if (!from.contains(input.getFirst())) {
+            return false;
+        }
+        if (pollution != 0) {
             return false;
         }
         return to.contains(output.getFirst());

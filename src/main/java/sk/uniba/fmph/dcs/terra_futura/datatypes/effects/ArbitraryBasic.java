@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,10 @@ public final class ArbitraryBasic implements Effect {
     private final List<Resource> to;
 
     public ArbitraryBasic(final List<Resource> to) {
-        this.to = to;
+        if (to == null) {
+            throw new NullPointerException("List to nemoze byt null");
+        }
+        this.to = new ArrayList<>(to);
     }
 
     @Override
