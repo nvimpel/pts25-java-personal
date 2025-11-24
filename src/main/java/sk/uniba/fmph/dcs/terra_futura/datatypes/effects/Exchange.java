@@ -8,7 +8,7 @@ import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 import java.util.List;
 
 /**
- * Implementácia efektu, ktory vie vymenit 1 surovinu za 1 inu.
+ * Implementácia efektu, ktory vie vymenit 1 z roznych surovin za 1 inu.
  * {@code check} skontroluje ci {@code List<Resource> input} obsahuje
  * prave jeden prvok, a ci sa ten prvok nachadza v zozname akceptovanych surovin
  * taktiez skontroluje ci vieme vymenit {@code List<Resource> input} za {@code List<Resource> output},

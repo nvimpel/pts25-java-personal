@@ -32,15 +32,11 @@ public final class TransformationFixed implements Effect {
 
     @Override
     public boolean check(final List<Resource> input, final List<Resource> output, final int pollution) {
-        for (Resource r : input) {
-            if (Collections.frequency(from, r) != Collections.frequency(input, r)) {
-                return false;
-            }
+        if (!compareMultisets(from, input)) {
+            return false;
         }
-        for (Resource r : output) {
-            if (Collections.frequency(to, r) != Collections.frequency(output, r)) {
-                return false;
-            }
+        if (!compareMultisets(to, output)) {
+            return false;
         }
         return this.pollution == pollution;
 
@@ -57,7 +53,7 @@ public final class TransformationFixed implements Effect {
         JSONArray arrFrom = new JSONArray();
         JSONArray arrTo = new JSONArray();
 
-        for (Resource r : to) {
+        for (Resource r : from) {
             arrFrom.put(r.toString());
         }
 
@@ -71,6 +67,19 @@ public final class TransformationFixed implements Effect {
         json.put("pollution", pollution);
 
         return json.toString();
+    }
+
+    private boolean compareMultisets(final List<Resource> multiset1, final List<Resource> multiset2) {
+        if (multiset1.size() != multiset2.size()) {
+            return false;
+        }
+
+        for (Resource r1 : multiset1) {
+            if (Collections.frequency(multiset1, r1) != Collections.frequency(multiset2, r1)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
