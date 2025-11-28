@@ -12,8 +12,8 @@ import static sk.uniba.fmph.dcs.terra_futura.PileGenerator.pileGenerator;
 
 
 public class Pile {
-    private List<Card> pile;
-    private List<Card> visible = new ArrayList<>();
+    private final List<Card> pile;
+    private final List<Card> visible = new ArrayList<>();
 
     private static final int NUMBER_OF_VISIBLE_CARDS = 4;
 
