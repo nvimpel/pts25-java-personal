@@ -1,19 +1,43 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
-import java.util.Optional;
+import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
+
+import java.util.*;
+
+import static sk.uniba.fmph.dcs.terra_futura.PileGenerator.pileGenerator;
+
+
 
 class Pile {
-    java.util.List<Card> cards;
+    private List<Card> pile;
+    private List<Card> visible = new ArrayList<>();
 
-    Card getCard(int index) {
-        return null;
+
+    public Pile(Deck deck) {
+        if (deck == Deck.I){
+            pile = pileGenerator(Deck.I);
+        }
+        else{
+            pile = pileGenerator(Deck.II);
+        }
+
+        for  (int i = 1; i <= 4; i++) {
+            visible.addFirst(pile.removeFirst());
+        }
     }
 
-    Optional<Card> takeCard(int index) {
-        return Optional.empty();
+    Optional<Card> getCard(int index) {
+        return Optional.of(visible.get(index));
     }
 
-    void removeLastCard() {
+    public void takeCard(int index) {
+        visible.remove(index);
+        visible.addFirst(pile.removeFirst());
+    }
+
+    public void removeLastCard() {
+        visible.removeLast();
+        visible.addFirst(pile.removeFirst());
     }
 
     String state() {
