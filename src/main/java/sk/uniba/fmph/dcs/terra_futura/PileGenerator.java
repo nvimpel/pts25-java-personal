@@ -13,6 +13,9 @@ import java.util.List;
  * 6x cards generating red
  * 5x cards generating
  * 2x two material transforming cards
+ *
+ * PILE 2:
+ *
  **/
 public class PileGenerator {
     public static List<Card> pileGenerator(Deck deck){
