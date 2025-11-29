@@ -38,7 +38,7 @@ final class PileGenerator {
         if (deck == null) {
             throw new NullPointerException("Deck can't be null!");
         }
-        if (deck == Deck.I){
+        if (deck == Deck.I) {
             return deck1();
         }
 

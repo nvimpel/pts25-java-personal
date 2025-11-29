@@ -43,7 +43,7 @@ public class Pile {
 
     private void takeCard() {
         visible.addFirst(pile.removeFirst());
-        if(pile.isEmpty()){
+        if (pile.isEmpty()) {
             Collections.shuffle(discardPile);
             pile.addAll(discardPile);
             discardPile.clear();
