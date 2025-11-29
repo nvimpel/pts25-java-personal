@@ -1,4 +1,4 @@
-package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
+package sk.uniba.fmph.dcs.terra_futura.effects;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

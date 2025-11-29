@@ -1,4 +1,4 @@
-package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
+package sk.uniba.fmph.dcs.terra_futura.effects;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,105 +9,100 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ExchangeTests {
+public class ArbitraryBasicTests {
 
-    private Exchange exchange;
+    private ArbitraryBasic effect;
 
     @Before
     public void setUp() {
-        List<Resource> from = new ArrayList<>();
-        from.add(Resource.Green);
-        from.add(Resource.Red);
-
         List<Resource> to = new ArrayList<>();
-        to.add(Resource.Money);
-        to.add(Resource.Car);
+        to.add(Resource.Green);
+        to.add(Resource.Red);
 
-        exchange = new Exchange(from, to);
+        effect = new ArbitraryBasic(to);
     }
 
     // -------------------------------------------------------------
     // Validne pripady
     // -------------------------------------------------------------
     @Test
-    public void testCheckValid() {
+    public void testCheckStandardValid() {
         List<Resource> input = new ArrayList<>();
-        input.add(Resource.Green);
-
         List<Resource> output = new ArrayList<>();
-        output.add(Resource.Money);
+        output.add(Resource.Green);
 
-        assertTrue(exchange.check(input, output, 0));
+        assertTrue(effect.check(input, output, 0));
     }
 
     // -------------------------------------------------------------
     // Invalidne pripady
     // -------------------------------------------------------------
+
     @Test
-    public void testCheckInvalidInputResource() {
+    public void testCheckWrongOutputResource() {
         List<Resource> input = new ArrayList<>();
-        input.add(Resource.Yellow); // nie je v from
-
         List<Resource> output = new ArrayList<>();
-        output.add(Resource.Money);
+        output.add(Resource.Money); // to = [Green,Red]
 
-        assertFalse(exchange.check(input, output, 0));
+        assertFalse(effect.check(input, output, 0));
     }
 
     @Test
-    public void testCheckInvalidOutputResource() {
+    public void testCheckMultipleOutputsShouldFail() {
         List<Resource> input = new ArrayList<>();
-        input.add(Resource.Green);
-
         List<Resource> output = new ArrayList<>();
-        output.add(Resource.Gear); // nie je v to
+        output.add(Resource.Green);
+        output.add(Resource.Red); // viac nez jeden
 
-        assertFalse(exchange.check(input, output, 0));
+        assertFalse(effect.check(input, output, 0));
     }
 
     @Test
-    public void testCheckMultipleInputs() {
+    public void testCheckNonEmptyInputShouldFail() {
         List<Resource> input = new ArrayList<>();
-        input.add(Resource.Green);
-        input.add(Resource.Red);
+        input.add(Resource.Gear); // nemoze mat nic v input
 
         List<Resource> output = new ArrayList<>();
-        output.add(Resource.Money);
+        output.add(Resource.Green);
 
-        assertFalse(exchange.check(input, output, 0));
+        assertFalse(effect.check(input, output, 0));
     }
 
     @Test
-    public void testCheckMultipleOutputs() {
+    public void testCheckNonZeroPollutionShouldFail() {
         List<Resource> input = new ArrayList<>();
-        input.add(Resource.Green);
 
         List<Resource> output = new ArrayList<>();
-        output.add(Resource.Money);
-        output.add(Resource.Car);
+        output.add(Resource.Green);
 
-        assertFalse(exchange.check(input, output, 0));
+        assertFalse(effect.check(input, output, 2)); // polution musi = 0
+    }
+
+    @Test
+    public void testCheckEmptyOutputShouldFail() {
+        List<Resource> input = new ArrayList<>();
+        List<Resource> output = new ArrayList<>();
+
+        assertFalse(effect.check(input, output, 0));
     }
 
     // -------------------------------------------------------------
     // Ostatne metody
     // -------------------------------------------------------------
+
     @Test
     public void testHasAssistance() {
-        assertFalse(exchange.hasAssistance());
+        assertFalse(effect.hasAssistance());
     }
 
     @Test
     public void testStateContainsCorrectValues() {
-        String json = exchange.state();
+        String json = effect.state();
         assertNotNull(json);
 
-        assertTrue(json.contains("Exchange"));
-        assertTrue(json.contains("accepts"));
-        assertTrue(json.contains("returns"));
+        assertTrue(json.contains("ArbitraryBasic"));
         assertTrue(json.contains("Green"));
         assertTrue(json.contains("Red"));
-        assertTrue(json.contains("Money"));
-        assertTrue(json.contains("Car"));
+        assertTrue(json.contains("generates"));
     }
 }
