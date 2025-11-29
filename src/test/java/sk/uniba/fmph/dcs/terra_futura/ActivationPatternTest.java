@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 
-import sk.uniba.fmph.dcs.terra_futura.InterfaceActivateGrid;
-import sk.uniba.fmph.dcs.terra_futura.ActivationPattern;
-
 import static org.junit.Assert.*;
 
 class ActivateGridFake implements InterfaceActivateGrid {
@@ -22,13 +19,12 @@ class ActivateGridFake implements InterfaceActivateGrid {
     }
 
     @Override
-    public void setActivationPattern(Collection<SimpleEntry<Integer,Integer>> pattern) {
+    public void setActivationPattern(Collection<SimpleEntry<Integer, Integer>> pattern) {
         activations = new ArrayList<>(pattern);
     }
 }
 
 public class ActivationPatternTest {
-
     private ActivateGridFake grid;
     private ActivationPattern activationPattern;
     private ArrayList<SimpleEntry<Integer, Integer>> patternEntries;
@@ -37,24 +33,24 @@ public class ActivationPatternTest {
     public void setUp() {
         grid = new ActivateGridFake();
         patternEntries = new ArrayList<>();
-        patternEntries.add(new SimpleEntry<Integer,Integer>(0, 0));
-        patternEntries.add(new SimpleEntry<Integer,Integer>(0, 0));
-        patternEntries.add(new SimpleEntry<Integer,Integer>(-1, 1));
+        patternEntries.add(new SimpleEntry<Integer, Integer>(0, 0));
+        patternEntries.add(new SimpleEntry<Integer, Integer>(0, 0));
+        patternEntries.add(new SimpleEntry<Integer, Integer>(-1, 1));
         activationPattern = new ActivationPattern(grid, patternEntries);
     }
 
-    private void checkStateString(String expectedList, boolean expectedActivated) {
+    private void checkStateString(final String expectedList, final boolean expectedActivated) {
         System.out.println("Nas JSON:\n");
         System.out.println(activationPattern.state());
         System.out.println("Nas JSON:\n");
         JSONObject obj = new JSONObject(activationPattern.state());
-        JSONArray arr =  obj.getJSONArray("activations");
+        JSONArray arr = obj.getJSONArray("activations");
         StringBuilder s = new StringBuilder();
-        for(int i=0; i<arr.length(); i++) {
+        for (int i = 0; i < arr.length(); i++) {
             JSONObject pair = arr.getJSONObject(i);
             s.append(String.format("(%s,%s)", pair.getInt("x"), pair.getInt("y")));
         }
-        
+
         assertEquals(expectedList, s.toString());
         assertEquals(expectedActivated, obj.getBoolean("selected"));
     }
@@ -71,12 +67,5 @@ public class ActivationPatternTest {
         assertEquals(Integer.valueOf(0), grid.activations.get(1).getValue());
         assertEquals(Integer.valueOf(-1), grid.activations.get(2).getKey());
         assertEquals(Integer.valueOf(1), grid.activations.get(2).getValue());
-    }
-        
-
-    @Test
-    public void testPatternCannotBeActivatedTwice() {
-        activationPattern.select();
-    //assertThrows(activationPattern.select());
     }
 }
