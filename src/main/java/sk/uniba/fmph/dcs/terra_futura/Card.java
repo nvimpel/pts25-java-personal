@@ -24,7 +24,7 @@ public class Card {
     private final Optional<Effect> lowerEffect;
 
     public Card(final Optional<Effect> lowerEffect, final Optional<Effect> upperEffect, final int pollutionSpaces) {
-        if (lowerEffect == null || upperEffect == null || (Integer) pollutionSpaces == null) {
+        if (lowerEffect == null || upperEffect == null) {
             throw new NullPointerException("Null value can't be passed to Card constructor.");
         }
         this.resources = getMapWithoutResources();
@@ -43,7 +43,7 @@ public class Card {
         for (Resource resource : resources) {
             neededCounts.put(resource, neededCounts.get(resource) + 1);
         }
-        if (!isPolluted()) {
+        if (!isClear()) {
             if (resources.stream().distinct().count() == 1 && resources.contains(Resource.Pollution) &&
                     neededCounts.get(Resource.Pollution) <= this.resources.get(Resource.Pollution)) {
                 return true;
@@ -61,11 +61,13 @@ public class Card {
     /**
      * Odoberie dane resources z karty ak je to mozne.
      **/
-    public void getResources(final List<Resource> resources) {
+    public void getResources(final List<Resource> resources) throws IllegalArgumentException {
         if (canGetResources(resources)) {
             for (Resource resource : resources) {
                 this.resources.put(resource, this.resources.get(resource) - 1);
             }
+        } else {
+            throw new IllegalArgumentException("Can't get given resources");
         }
     }
 
@@ -74,17 +76,19 @@ public class Card {
      * nie je pollutnua).
      **/
     public boolean canPutResources(final List<Resource> resources) {
-        return isPolluted();
+        return isClear();
     }
 
     /**
      * Prida dane resources na kartu ak nie je pollutnuta.
      **/
-    public void putResources(final List<Resource> resources) {
+    public void putResources(final List<Resource> resources) throws IllegalArgumentException {
         if (canPutResources(resources)) {
             for (Resource resource : resources) {
                 this.resources.put(resource, this.resources.get(resource) + 1);
             }
+        } else {
+            throw new IllegalArgumentException("Can't put given resources");
         }
     }
 
@@ -142,7 +146,7 @@ public class Card {
         return result;
     }
 
-    private boolean isPolluted() {
+    private boolean isClear() {
         return this.resources.get(Resource.Pollution) <= pollutionSpaces;
     }
 }
