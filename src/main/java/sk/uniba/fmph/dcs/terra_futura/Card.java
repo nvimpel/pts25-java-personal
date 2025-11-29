@@ -9,13 +9,21 @@ import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
 import org.json.JSONObject;
 
+/**
+ * Reprezentacia karty. Kazda karta ma nejake efekty (spodny, horny, alebo oba)
+ * a volne miesta pre pollutions.
+ * Na karte (ak je na gride nejakeho hraca) skladujeme nejake resources. Tato
+ * trieda poskytuje metody pre pridavanie/odoberanie/vyrabanie resourcov z karty
+ * podla pravidiel hry.
+ *
+ **/
 public class Card {
     private final Map<Resource, Integer> resources;
-    private int pollutionSpaces;
-    private Optional<Effect> upperEffect;
-    private Optional<Effect> lowerEffect;
+    private final int pollutionSpaces;
+    private final Optional<Effect> upperEffect;
+    private final Optional<Effect> lowerEffect;
 
-    public Card(Optional<Effect> lowerEffect, Optional<Effect> upperEffect, int pollutionSpaces) {
+    public Card(final Optional<Effect> lowerEffect, final Optional<Effect> upperEffect, final int pollutionSpaces) {
         if (lowerEffect == null || upperEffect == null || (Integer) pollutionSpaces == null) {
             throw new NullPointerException("Null value can't be passed to Card constructor.");
         }
@@ -25,16 +33,17 @@ public class Card {
         this.pollutionSpaces = pollutionSpaces;
     }
 
-    private boolean isActive() {
-        return this.resources.get(Resource.Pollution) <= pollutionSpaces;
-    }
-
-    public boolean canGetResources(List<Resource> resources) {
+    /**
+     * Zisti ci mozeme zobrat dane resources z kraty (musi ich obsahovat a zaroven
+     * nemoze byt pollutnuta).
+     * Ak je pollutnuta tak vieme zobrat iba pollution.
+     **/
+    public boolean canGetResources(final List<Resource> resources) {
         Map<Resource, Integer> neededCounts = getMapWithoutResources();
         for (Resource resource : resources) {
             neededCounts.put(resource, neededCounts.get(resource) + 1);
         }
-        if (!isActive()) {
+        if (!isPolluted()) {
             if (resources.stream().distinct().count() == 1 && resources.contains(Resource.Pollution) &&
                     neededCounts.get(Resource.Pollution) <= this.resources.get(Resource.Pollution)) {
                 return true;
@@ -49,7 +58,10 @@ public class Card {
         return true;
     }
 
-    public void getResources(List<Resource> resources) {
+    /**
+     * Odoberie dane resources z karty ak je to mozne.
+     **/
+    public void getResources(final List<Resource> resources) {
         if (canGetResources(resources)) {
             for (Resource resource : resources) {
                 this.resources.put(resource, this.resources.get(resource) - 1);
@@ -57,11 +69,18 @@ public class Card {
         }
     }
 
-    public boolean canPutResources(List<Resource> resources) {
-        return isActive();
+    /**
+     * Zisti ci mozeme pridat dane resources na kartu. (iba zisti ci nie je karta
+     * nie je pollutnua).
+     **/
+    public boolean canPutResources(final List<Resource> resources) {
+        return isPolluted();
     }
 
-    public void putResources(List<Resource> resources) {
+    /**
+     * Prida dane resources na kartu ak nie je pollutnuta.
+     **/
+    public void putResources(final List<Resource> resources) {
         if (canPutResources(resources)) {
             for (Resource resource : resources) {
                 this.resources.put(resource, this.resources.get(resource) + 1);
@@ -69,15 +88,32 @@ public class Card {
         }
     }
 
-    public boolean check(List<Resource> input, List<Resource> output, int pollution) {
-        return false;
+    /**
+     * Zisti ci je mozne vyrobit pouzitim horneho efektu karty z danych input
+     * resources output resources.
+     **/
+    public boolean checkUpper(List<Resource> input, List<Resource> output, int pollution) {
+        return upperEffect.isPresent() && upperEffect.get().check(input, output, pollution);
     }
 
+    /**
+     * Zisti ci je mozne vyrobit pouzitim dolneho efektu karty z danych input
+     * resources output resources.
+     **/
     public boolean checkLower(List<Resource> input, List<Resource> output, int pollution) {
-        return false;
+        return lowerEffect.isPresent() && lowerEffect.get().check(input, output, pollution);
     }
 
+    /**
+     * Zisti ci spodny alebo dolny efekt karty obsahuje asistenciu.
+     **/
     public boolean hasAssistance() {
+        if (lowerEffect.isPresent() && lowerEffect.get().hasAssistance()) {
+            return true;
+        }
+        if (upperEffect.isPresent() && upperEffect.get().hasAssistance()) {
+            return true;
+        }
         return false;
     }
 
@@ -106,4 +142,7 @@ public class Card {
         return result;
     }
 
+    private boolean isPolluted() {
+        return this.resources.get(Resource.Pollution) <= pollutionSpaces;
+    }
 }
