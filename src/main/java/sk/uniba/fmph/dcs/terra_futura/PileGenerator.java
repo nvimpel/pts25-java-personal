@@ -48,4 +48,9 @@ final class PileGenerator {
     private static List<Card> deck1() {
         return new ArrayList<>();
     }
+
+
+    private static List<Card> deck2() {
+        return new ArrayList<>();
+    }
 }
