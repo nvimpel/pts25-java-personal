@@ -1,4 +1,4 @@
-package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
+package sk.uniba.fmph.dcs.terra_futura.effects;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,9 +10,11 @@ import java.util.List;
 
 /**
  * Implementácia efektu, ktory iba generuje suroviny.
- * Generovat moze iba jednu naraz, ale moze mat viacero surovin ktore vie generovat
- * {@code check} skontroluje ci generovana surovina sa presne zhoduje s nejakou ktoru dany efekt vie generovat.
- * Ak je v outpute viac ako jedna surovina  {@return false}
+ * Generovat moze iba jednu naraz, ale moze mat viacero surovin ktore vie
+ * generovat
+ * {@code check} skontroluje ci generovana surovina sa presne zhoduje s nejakou
+ * ktoru dany efekt vie generovat.
+ * Ak je v outpute viac ako jedna surovina {@return false}
  * Input a pollution musia byt prazdne respektive nulove
  *
  **/
