@@ -3,6 +3,7 @@ package sk.uniba.fmph.dcs.terra_futura;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
@@ -11,10 +12,13 @@ import org.json.JSONObject;
 public class Card {
     private final Map<Resource, Integer> resources;
     private int pollutionSpaces;
-    private Effect upperEffect;
-    private Effect lowerEffect;
+    private Optional<Effect> upperEffect;
+    private Optional<Effect> lowerEffect;
 
-    public Card(Effect lowerEffect, Effect upperEffect, int pollutionSpaces) {
+    public Card(Optional<Effect> lowerEffect, Optional<Effect> upperEffect, int pollutionSpaces) {
+        if (lowerEffect == null || upperEffect == null || (Integer) pollutionSpaces == null) {
+            throw new NullPointerException("Null value can't be passed to Card constructor.");
+        }
         this.resources = getMapWithoutResources();
         this.upperEffect = upperEffect;
         this.lowerEffect = lowerEffect;
@@ -23,14 +27,6 @@ public class Card {
 
     private boolean isActive() {
         return this.resources.get(Resource.Pollution) <= pollutionSpaces;
-    }
-
-    private static Map<Resource, Integer> getMapWithoutResources() {
-        Map<Resource, Integer> result = new HashMap<>();
-        for (Resource resource : Resource.values()) {
-            result.put(resource, 0);
-        }
-        return result;
     }
 
     public boolean canGetResources(List<Resource> resources) {
@@ -86,12 +82,28 @@ public class Card {
     }
 
     public String state() {
-        return "";
-        // JSONObject json = new JSONObject();
-        // json.put("resources", new JSONObject(this.resources));
-        // json.put("lowerEffect", lowerEffect.state());
-        // json.put("upperEffect", upperEffect.state());
-        // json.put("pollutionSpaces", pollutionSpaces);
-        // return json.toString();
+        JSONObject json = new JSONObject();
+        json.put("resources", new JSONObject(this.resources));
+        putOptionalEffectToJSON(json, "lowerEffect", lowerEffect);
+        putOptionalEffectToJSON(json, "upperEffect", upperEffect);
+        json.put("pollutionSpaces", pollutionSpaces);
+        return json.toString();
     }
+
+    private static void putOptionalEffectToJSON(JSONObject json, String key, Optional<Effect> effect) {
+        if (effect.isPresent()) {
+            json.put(key, effect.get().state());
+        } else {
+            json.put(key, JSONObject.NULL);
+        }
+    }
+
+    private static Map<Resource, Integer> getMapWithoutResources() {
+        Map<Resource, Integer> result = new HashMap<>();
+        for (Resource resource : Resource.values()) {
+            result.put(resource, 0);
+        }
+        return result;
+    }
+
 }

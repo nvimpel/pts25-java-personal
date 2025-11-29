@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
+import java.util.Optional;
 
 import sk.uniba.fmph.dcs.terra_futura.Card;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
@@ -24,7 +25,8 @@ public class CardTest {
 
     @Before
     public void setUp() {
-        upperCard = new Card(null, new ArbitraryBasic(new ArrayList<>(List.of(Resource.Red))), 1);
+        upperCard = new Card(Optional.empty(), Optional.of(new ArbitraryBasic(new ArrayList<>(List.of(Resource.Red)))),
+                1);
 
         ArrayList<Effect> lowerEffects = new ArrayList<>();
         lowerEffects.add(new TransformationFixed(
@@ -33,7 +35,7 @@ public class CardTest {
         lowerEffects.add(new Exchange(
                 new ArrayList<>(List.of(Resource.Red)),
                 new ArrayList<>(List.of(Resource.Green))));
-        lowerCard = new Card(new EffectOr(lowerEffects), null, 1);
+        lowerCard = new Card(Optional.of(new EffectOr(lowerEffects)), Optional.empty(), 1);
     }
 
     @Test
