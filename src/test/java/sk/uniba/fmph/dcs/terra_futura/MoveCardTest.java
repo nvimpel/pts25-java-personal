@@ -3,6 +3,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 import sk.uniba.fmph.dcs.terra_futura.effects.EffectOr;
+import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -14,6 +16,9 @@ public class MoveCardTest {
     private GridPosition gridPosition;
 
     private static class FakePile extends Pile {
+        public FakePile(final Deck deck) {
+            super(deck);
+        }
         boolean cardPresent = true;
         Card testCard = new Card(Optional.of(new EffectOr(new ArrayList<>())), Optional.of(new EffectOr(new ArrayList<>())), 0);
         Card takenCard = null;
@@ -50,7 +55,7 @@ public class MoveCardTest {
     @Test
     public void moveCard_edgeIndicesValidTest() {
         moveCard = new MoveCard();
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         try {
@@ -65,7 +70,7 @@ public class MoveCardTest {
     @Test
     public void moveCard_InvalidIndexLowerBoundTest() {
         moveCard = new MoveCard();
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         try {
@@ -78,7 +83,7 @@ public class MoveCardTest {
     @Test
     public void moveCard_InvalidIndexUpperBoundTest() {
         moveCard = new MoveCard();
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         try {
@@ -91,7 +96,7 @@ public class MoveCardTest {
     @Test
     public void moveCard_CardNotPresentInPileTest() {
         moveCard = new MoveCard();
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         pile.cardPresent = false;
@@ -106,7 +111,7 @@ public class MoveCardTest {
     @Test
     public void moveCard_CannotPutCardOnGridTest() {
         moveCard = new MoveCard();
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         int index = 1;
@@ -121,7 +126,7 @@ public class MoveCardTest {
     @Test
     public void moveCard_SuccessTest() {
         moveCard = new MoveCard();
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         int index = 2;

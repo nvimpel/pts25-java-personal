@@ -1,9 +1,12 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
+import sk.uniba.fmph.dcs.terra_futura.effects.ArbitraryBasic;
 import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
+import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Generator of piles defined like this.
@@ -30,6 +33,10 @@ import java.util.List;
  * 1x: money -> 2x green || money -> 3x green + pollution
  * 1x: 2x money -> whatever product + pollution
  **/
+
+//----------------------------
+//Nie je cele implementovane, generujeme aspon par kariet aby nam zbehly testy
+//----------------------------
 final class PileGenerator {
     private PileGenerator() {
         throw new AssertionError("PileGenerator instances forbidden!");
@@ -47,17 +54,17 @@ final class PileGenerator {
 
     private static List<Card> deck1() {
         List<Card> cards = new ArrayList<>();
-        /*
+
         cards.addAll(generateArbitrary(Resource.Money,4));
         cards.addAll(generateArbitrary(Resource.Green,6));
         cards.addAll(generateArbitrary(Resource.Red,6));
         cards.addAll(generateArbitrary(Resource.Yellow,5));
 
 
-
+        /*
         Effect effect1 = new TransformationFixed(List.of(Resource.Green,Resource.Yellow,Resource.Red),
                 List.of(Resource.Green,Resource.Yellow,Resource.Red),0);
-        Effect effect2 = new TransformationFixed(List.of(Resource.Green,Resource.Yellow,Resource.Red))
+        Effect effect2 = new TransformationFixed(List.of(Resource.Green,Resource.Yellow,Resource.Red));
         EffectOr effectOr = new EffectOr();
         */
 
@@ -68,7 +75,7 @@ final class PileGenerator {
     private static List<Card> deck2() {
         return new ArrayList<>();
     }
-/*
+
     private static List<Card> generateArbitrary(Resource resource, int count){
         int pollutionSpaces = 1;
         if (resource.equals(Resource.Money)) pollutionSpaces = 0;
@@ -80,9 +87,12 @@ final class PileGenerator {
         }
         return cards;
     }
+    /*
     private static List<Card> generateTransform() {
         List<Card> cards = new ArrayList<>();
 
     }
-*/
+
+     */
+
 }

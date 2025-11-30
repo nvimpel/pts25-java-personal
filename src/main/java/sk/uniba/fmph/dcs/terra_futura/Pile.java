@@ -2,10 +2,7 @@ package sk.uniba.fmph.dcs.terra_futura;
 
 import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 import static sk.uniba.fmph.dcs.terra_futura.PileGenerator.pileGenerator;
@@ -32,16 +29,25 @@ public class Pile {
         }
     }
 
-    public final Optional<Card> getCard(final int index) {
-        Optional<Card> card = Optional.empty();
-        if (visible.get(index) != null) {
-            card = Optional.of(visible.remove(index));
-            takeCard();
+    public Optional<Card> getCard(final int index) {
+        Card card = visible.get(index);
+        if (card == null) {
+            return Optional.empty();
         }
-        return card;
+        return Optional.of(card);
     }
 
-    private void takeCard() {
+    public Card takeCard(int index){
+        if (getCard(index).isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        Card card = visible.remove(index);
+        addCard();
+        return card;
+
+    }
+
+    private void addCard() {
         visible.addFirst(pile.removeFirst());
         if (pile.isEmpty()) {
             Collections.shuffle(discardPile);
@@ -52,7 +58,7 @@ public class Pile {
 
     public final void removeLastCard() {
         discardPile.add(visible.removeLast());
-        takeCard();
+        addCard();
     }
 
     final String state() {
