@@ -1,6 +1,9 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
 import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
+import sk.uniba.fmph.dcs.terra_futura.effects.ArbitraryBasic;
+import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
+import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +12,7 @@ import java.util.Set;
 import java.util.Optional;
 
 
-public final class Grid {
+public class Grid {
     private final ArrayList<ArrayList<Card>> grid = new ArrayList<>();
     private static final int MAXIMAL_GRID_LENGTH = 5;
     private static final int GRID_OFFSET = 2;
@@ -17,12 +20,15 @@ public final class Grid {
     private final Bounds bounds = new Bounds();
 
     public Grid() {
+
+
         for (int i = 0; i < MAXIMAL_GRID_LENGTH; i++) {
             grid.add(new ArrayList<>());
             for (int j = 0; j < MAXIMAL_GRID_LENGTH; j++) {
                 grid.get(i).add(null);
             }
         }
+        createStaringCard();
     }
 
 
@@ -68,10 +74,14 @@ public final class Grid {
 
     private void setActivableNeighbours(final GridPosition coordinate) {
         for (int i = bounds.bottomBound; i <= bounds.topBound; i++) {
-            activable.add(new GridPosition(i, coordinate.y()));
+            if (getCard(coordinate).isPresent()) {
+                activable.add(new GridPosition(i, coordinate.y()));
+            }
         }
         for (int i = bounds.leftBound; i <= bounds.rightBound; i++) {
-            activable.add(new GridPosition(coordinate.x(), i));
+            if (getCard(coordinate).isPresent()) {
+                activable.add(new GridPosition(coordinate.x(), i));
+            }
         }
     }
 
@@ -110,6 +120,13 @@ public final class Grid {
         if (coordinate.y() > bounds.rightBound) {
             bounds.rightBound = coordinate.y();
         }
+    }
+
+    private void createStaringCard() {
+        List<Resource> to = List.of(Resource.Money, Resource.Yellow, Resource.Red, Resource.Green);
+        Effect effect = new ArbitraryBasic(to);
+        Card startingCard = new Card(Optional.empty(), Optional.of(effect), 0);
+        grid.get(GRID_OFFSET).set(GRID_OFFSET, startingCard);
     }
 
     private static final class Bounds {
