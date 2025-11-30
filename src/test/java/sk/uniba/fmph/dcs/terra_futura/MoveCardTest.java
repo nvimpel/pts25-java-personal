@@ -6,7 +6,6 @@ import java.util.Optional;
 
 
 public class MoveCardTest {
-
     private MoveCard moveCard;
     private FakePile pile;
     private FakeGrid grid;
@@ -47,47 +46,43 @@ public class MoveCardTest {
     }
 
     @Test
-    public void selectCardIndex_ValidTest() {
-        moveCard = new MoveCard();
-        try {
-            moveCard.selectCardIndex(0);
-            moveCard.selectCardIndex(3);
-        } catch (IllegalArgumentException e) {
-            Assert.assertNull(e);
-        }
-
-    }
-
-    @Test
-    public void selectCardIndex_InvalidLowerBoundTest() {
-        moveCard = new MoveCard();
-        try {
-            moveCard.selectCardIndex(-1);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Card index out of range <0;3>", e.getMessage());
-        }
-    }
-
-    @Test
-    public void selectCardIndex_InvalidUpperBoundTest() {
-        moveCard = new MoveCard();
-        try {
-            moveCard.selectCardIndex(4);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Card index out of range <0;3>", e.getMessage());
-        }
-    }
-
-    @Test
-    public void moveCard_IndexNotSetTest() {
+    public void moveCard_edgeIndicesValidTest() {
         moveCard = new MoveCard();
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         try {
-            moveCard.moveCard(pile, gridPosition, grid);
-        } catch (IllegalStateException e) {
-            Assert.assertEquals("Card index not set", e.getMessage());
+            moveCard.moveCard(pile, 0, gridPosition, grid);
+            moveCard.moveCard(pile, 3, gridPosition, grid);
+        } catch (IllegalArgumentException e) {
+            Assert.assertNotEquals("Card index out of range <0;3>", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void moveCard_InvalidIndexLowerBoundTest() {
+        moveCard = new MoveCard();
+        pile = new FakePile();
+        grid = new FakeGrid();
+        gridPosition = new GridPosition(0,0);
+        try {
+            moveCard.moveCard(pile,-1, gridPosition, grid);
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Card index out of range <0;3>", e.getMessage());
+        }
+    }
+
+    @Test
+    public void moveCard_InvalidIndexUpperBoundTest() {
+        moveCard = new MoveCard();
+        pile = new FakePile();
+        grid = new FakeGrid();
+        gridPosition = new GridPosition(0,0);
+        try {
+            moveCard.moveCard(pile, 4,  gridPosition, grid);
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Card index out of range <0;3>", e.getMessage());
         }
     }
 
@@ -99,9 +94,8 @@ public class MoveCardTest {
         gridPosition = new GridPosition(0,0);
         pile.cardPresent = false;
         int index = 1;
-        moveCard.selectCardIndex(index);
         try {
-            moveCard.moveCard(pile, gridPosition, grid);
+            moveCard.moveCard(pile, index, gridPosition, grid);
         } catch (IllegalStateException e) {
             Assert.assertEquals("There is no card at index:" + index + ".", e.getMessage());
         }
@@ -115,9 +109,8 @@ public class MoveCardTest {
         gridPosition = new GridPosition(0,0);
         int index = 1;
         grid.accept = false;
-        moveCard.selectCardIndex(index);
         try {
-            moveCard.moveCard(pile, gridPosition, grid);
+            moveCard.moveCard(pile, index, gridPosition, grid);
         } catch (IllegalStateException e) {
             Assert.assertEquals("Cannot put card at " + gridPosition, e.getMessage());
         }
@@ -130,9 +123,7 @@ public class MoveCardTest {
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         int index = 2;
-        moveCard.selectCardIndex(index);
-
-        boolean result = moveCard.moveCard(pile, gridPosition, grid);
+        boolean result = moveCard.moveCard(pile, index, gridPosition, grid);
         Assert.assertTrue(result);
     }
 }
