@@ -1,33 +1,37 @@
-package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
+package sk.uniba.fmph.dcs.terra_futura.effects;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementácia efektu, ktory iba generuje suroviny.
- * Generovat moze iba jednu naraz, ale moze mat viacero surovin ktore vie generovat
- * {@code check} skontroluje ci generovana surovina sa presne zhoduje s nejakou ktoru dany efekt vie generovat.
- * Ak je v outpute viac ako jedna surovina  {@return false}
- * Input a pollution musia byt prazdne respektive nulove
- *
- **/
+ * Implementácia efektu, ktorý iba generuje suroviny.
+ * Generovať môže vždy len jednu surovinu naraz, no môže mať definovaných
+ * viacero typov surovín, ktoré vie produkovať.
+ * {@code check} overuje, či generovaná surovina presne zodpovedá jednej
+ * zo surovín, ktoré daný efekt dokáže vytvoriť.
+ * Ak sa v {@code output} nachádza viac než jedna surovina, metóda vráti {@code false}.
+ * {@code input} aj {@code pollution} musia byť prázdne, respektíve nulové.
+ */
+
 public final class ArbitraryBasic implements Effect {
     private final List<Resource> to;
 
     public ArbitraryBasic(final List<Resource> to) {
         if (to == null) {
-            throw new NullPointerException("List to nemoze byt null");
+            throw new NullPointerException("List to cant be null");
         }
-        this.to = new ArrayList<>(to);
+        this.to = List.copyOf(to);
     }
 
     @Override
     public boolean check(final List<Resource> input, final List<Resource> output, final int pollution) {
+        if (input == null || output == null) {
+            throw new NullPointerException("Input or output cant be null");
+        }
         if (pollution != 0) {
             return false;
         }

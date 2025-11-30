@@ -1,4 +1,4 @@
-package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
+package sk.uniba.fmph.dcs.terra_futura.effects;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,12 +11,12 @@ import java.util.Map;
 
 /**
  * Implementácia efektu, ktory transformuje suroviny.
- * Transformovat moze z lubovolnych surovin na lubovolne
- * {@code pollution} hovori aku pollution dana transformacia generuje
- * {@code check} skontroluje ci {@code List<Resource> input} je identicky
- * ako ten s ktorym vie dana transformacia pracovat.
- * Taktiez skontroluje ci pollution na vstupe funkcie sa rovna poluttionu,
- * ktory tato transformacia generuje
+ * Transformácia môže prebiehať z ľubovoľných surovín na ľubovoľné iné.
+ * {@code pollution} určuje, aké množstvo pollution daná transformácia generuje.
+ * {@code check} overuje, či je {@code List<Resource> input} identický so
+ * zoznamom surovín, s ktorými vie daná transformácia pracovať.
+ * Overuje tiež, či hodnota vstupného pollution je rovnaka ako pollution,
+ * ktoré táto transformácia vytvára
  *
  **/
 public final class TransformationFixed implements Effect {
@@ -30,8 +30,8 @@ public final class TransformationFixed implements Effect {
             throw new NullPointerException("From or to is null");
         }
 
-        this.from = from;
-        this.to = to;
+        this.from = List.copyOf(from);
+        this.to = List.copyOf(to);
         this.pollution = pollution;
     }
 

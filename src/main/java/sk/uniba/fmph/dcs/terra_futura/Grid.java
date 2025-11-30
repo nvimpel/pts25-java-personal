@@ -14,10 +14,10 @@ public class Grid {
         return false;
     }
 
-    public void output(GridPosition coordinate, Card card) {
+    public void putCard(GridPosition coordinate, Card card) {
     }
 
-    public boolean canReActivated(GridPosition coordinate) {
+    public boolean canBeActivated(GridPosition coordinate) {
         return false;
     }
 

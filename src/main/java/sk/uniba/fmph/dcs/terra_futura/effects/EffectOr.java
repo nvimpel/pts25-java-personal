@@ -1,4 +1,4 @@
-package sk.uniba.fmph.dcs.terra_futura.datatypes.effects;
+package sk.uniba.fmph.dcs.terra_futura.effects;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,12 +24,10 @@ public final class EffectOr implements Effect {
 
     public EffectOr(final List<Effect> effects) {
         if (effects == null) {
-            throw new NullPointerException("List effektov nemoze byt null");
+            throw new NullPointerException("List of effects cant be null");
         }
         this.effects = effects;
     }
-
-
 
     public void addEffect(final Effect effect) {
         if (effect == null) {
@@ -76,6 +74,5 @@ public final class EffectOr implements Effect {
 
         return json.toString();
     }
-
 
 }
