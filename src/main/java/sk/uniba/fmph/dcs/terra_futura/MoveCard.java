@@ -11,13 +11,14 @@ class MoveCard {
 
     /**
      * Metoda zistuje ci je premiestnenie validne.
-     * @param pile musi obsahovat na indexe cardIndex nejaku kartu
-     * @param cardIndex musi byt v rozsahu <0;3>
+     * 
+     * @param pile       musi obsahovat na indexe cardIndex nejaku kartu
+     * @param cardIndex  musi byt v rozsahu <0;3>
      * @param coordinate musi byt validny na vlozenie karty do gridu, to riesi grid
-     * @param grid samotny grid
+     * @param grid       samotny grid
      * @return true ak sa posun podaril a vyhadzuje vynimky ak nie
      */
-    boolean moveCard(final Pile pile, final int cardIndex, final GridPosition coordinate, final Grid grid) {
+    static boolean moveCard(final Pile pile, final int cardIndex, final GridPosition coordinate, final Grid grid) {
         final int numberOfCards = 4;
         if (cardIndex < 0 || cardIndex >= numberOfCards) {
             throw new IllegalArgumentException("Card index out of range <0;3>");
@@ -33,4 +34,3 @@ class MoveCard {
         }
     }
 }
-
