@@ -5,12 +5,12 @@ import java.util.Optional;
 class Pile {
     java.util.List<Card> cards;
 
-    Card getCard(int index) {
-        return null;
+    Optional<Card> getCard(int index) {
+        return Optional.empty();
     }
 
-    Optional<Card> takeCard(int index) {
-        return Optional.empty();
+    Card takeCard(int index) {
+        return null;
     }
 
     void removeLastCard() {

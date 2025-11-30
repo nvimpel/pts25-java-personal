@@ -14,8 +14,7 @@ public class Grid {
         return false;
     }
 
-    public boolean putCard(GridPosition coordinate, Card card) {
-        return false;
+    public void putCard(GridPosition coordinate, Card card) {
     }
 
     public boolean canBeActivated(GridPosition coordinate) {
