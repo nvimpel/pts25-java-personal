@@ -26,7 +26,7 @@ class MoveCard {
             throw new IllegalStateException("There is no card at index:" + cardIndex + ".");
         }
         if (grid.canPutCard(coordinate)) {
-            grid.putCard(coordinate, pile.getCard(cardIndex).get());
+            grid.putCard(coordinate, pile.takeCard(cardIndex));
             return true;
         } else {
             throw new IllegalStateException("Cannot put card at " + coordinate);
