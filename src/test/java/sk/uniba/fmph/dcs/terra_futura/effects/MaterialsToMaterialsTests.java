@@ -9,14 +9,14 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ResToResTests {
+public class MaterialsToMaterialsTests {
 
-    private ResToRes resToRes;
+    private MaterialsToMaterials resToRes;
 
     @Before
     public void setUp() {
         //Dve do jedneho s jednym polution
-        resToRes = new ResToRes(2, 1, 1);
+        resToRes = new MaterialsToMaterials(2, 1, 1);
     }
 
     // -------------------------------------------------------------

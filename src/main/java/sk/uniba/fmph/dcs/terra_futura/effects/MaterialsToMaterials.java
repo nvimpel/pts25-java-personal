@@ -1,6 +1,6 @@
 package sk.uniba.fmph.dcs.terra_futura.effects;
 
-import org.json.JSONArray;
+
 import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
@@ -9,43 +9,39 @@ import java.util.List;
 
 /**
  * Implementácia efektu, ktory vie vymenit n lubovolnych materialov (green,red,yellow)
- * pretransformovat na jeden lubovolny resource z listu {@code to} ktory je dany konstruktoru
  * {@code check} skontroluje ci {@code List<Resource> input} obsahuje
  * presne n prvkov, a ci su tieto prvky resources.
- * {@code List<Resource> output} moze obsahovat iba jeden resourece a musi sa zhodovat s {@code to}
- * {@code pollution} musi sediet podla efektu
+ * {@code List<Resource> output} moze obsahovat iba m prvkov a musia to byt materialy
+ * * {@code pollution} musi sediet presne
  *
  **/
-public final class ResExchange implements Effect {
+public final class MaterialsToMaterials implements Effect {
     private final int from;
-    private final List<Resource> to;
+    private final int to;
     private final int pollution;
 
-    public ResExchange(final int from, final List<Resource> to, final int pollution) {
+    public MaterialsToMaterials(final int from, final int to, final int pollution) {
         this.from = from;
-        this.to = List.copyOf(to);
+        this.to = to;
         this.pollution = pollution;
     }
 
     @Override
     public boolean check(final List<Resource> input, final List<Resource> output, final int pollution) {
         if (input == null || output == null) {
-            throw new IllegalArgumentException("Input or output is null");
+            throw new IllegalArgumentException("Input and output may not be null.");
         }
-        if (input.size() != from) {
+        if (input.size() != from || output.size() != to) {
             return false;
         }
-        if (output.size() != 1) {
+        if (this.pollution != pollution) {
             return false;
         }
-        if (pollution != this.pollution) {
-            return false;
-        }
-
         if (containsNonMaterial(input)) {
             return false;
         }
-        return to.contains(output.getFirst());
+        return !containsNonMaterial(output);
+
     }
 
     private boolean containsNonMaterial(final List<Resource> list) {
@@ -58,6 +54,7 @@ public final class ResExchange implements Effect {
         return false;
     }
 
+
     @Override
     public boolean hasAssistance() {
         return false;
@@ -66,17 +63,13 @@ public final class ResExchange implements Effect {
     @Override
     public String state() {
         JSONObject json = new JSONObject();
-        JSONArray arrTo = new JSONArray();
 
-
-        for (Resource r : to) {
-            arrTo.put(r.toString());
-        }
-
-        json.put("type", "Exchange");
+        json.put("type", "ResToRes");
         json.put("fromCount", from);
-        json.put("returns", arrTo);
+        json.put("toCount", to);
+        json.put("pollution", pollution);
 
         return json.toString();
     }
 }
+

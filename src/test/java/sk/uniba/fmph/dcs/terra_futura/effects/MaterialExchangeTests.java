@@ -11,9 +11,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ResExchangeTests {
+public class MaterialExchangeTests {
 
-    private ResExchange exchange;
+    private MaterialExchange exchange;
 
     @Before
     public void setUp() {
@@ -22,7 +22,7 @@ public class ResExchangeTests {
         allowedOutputs.add(Resource.Money);
         allowedOutputs.add(Resource.Car);
 
-        exchange = new ResExchange(2, allowedOutputs, 1);
+        exchange = new MaterialExchange(2, allowedOutputs, 1);
     }
 
     // -------------------------------------------------------------
