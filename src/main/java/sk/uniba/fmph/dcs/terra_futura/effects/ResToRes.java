@@ -11,8 +11,8 @@ import java.util.List;
  * Implementácia efektu, ktory vie vymenit n lubovolnych materialov (green,red,yellow)
  * {@code check} skontroluje ci {@code List<Resource> input} obsahuje
  * presne n prvkov, a ci su tieto prvky resources.
- * {@code List<Resource> output} moze obsahovat iba m materialov
- * {@code pollution} musi sediet podla efektu
+ * {@code List<Resource> output} moze obsahovat iba m prvkov a musia to byt materialy
+ * * {@code pollution} musi sediet presne
  *
  **/
 public final class ResToRes implements Effect {
