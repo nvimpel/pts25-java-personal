@@ -2,7 +2,11 @@ package sk.uniba.fmph.dcs.terra_futura;
 
 import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 import static sk.uniba.fmph.dcs.terra_futura.PileGenerator.pileGenerator;
@@ -37,7 +41,7 @@ public class Pile {
         return Optional.of(card);
     }
 
-    public Card takeCard(int index){
+    public Card takeCard(final int index) {
         if (getCard(index).isEmpty()) {
             throw new NoSuchElementException();
         }
