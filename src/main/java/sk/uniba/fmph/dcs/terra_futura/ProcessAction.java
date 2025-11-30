@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.AbstractMap.SimpleEntry;
 
 /**
- * Overí, či sa daná akcia (aktivácia karty) dá vykonať.
- * Ak sa niečo nedá vykonať, vráti false.
+ * Overí, či sa daná akcia (aktivácia karty) dá vykonať
+ * a vykoná ju. Ak sa niečo nedá vykonať, vráti false.
  * Bez podpory Assistance.
  **/
 public final class ProcessAction {
@@ -23,7 +23,6 @@ public final class ProcessAction {
             final List<Resource> outputs,
             final List<GridPosition> pollution
     ) {
-
         // Overenie, že karta existuje.
         final Optional<Card> cardOpt = grid.getCard(cardPosition);
         if (cardOpt.isEmpty()) { return false; }
@@ -33,6 +32,21 @@ public final class ProcessAction {
         if (!checkCardEffects(card, inputs, outputs, pollution.size())) { return false; }
         if (!card.canPutResources(outputs)) { return false; }
         if (!checkPollution(grid, pollution)) { return false; }
+
+        // Odobrať vstupné zdroje.
+        for (final SimpleEntry<Resource, GridPosition> input : inputs) {
+            final Card inputCard = grid.getCard(input.getValue()).orElseThrow();
+            inputCard.getResources(List.of(input.getKey()));
+        }
+
+        // Pridať výstupy na kartu.
+        card.putResources(outputs);
+
+        // Pridať pollution na dané karty.
+        placePollution(grid, pollution);
+
+        // Označiť kartu ako aktivovanú.
+        grid.setActivated(cardPosition);
 
         return true;
     }
@@ -79,5 +93,16 @@ public final class ProcessAction {
             if (!pollutionCard.canPutResources(List.of(Resource.Pollution))) return false;
         }
         return true;
+    }
+
+    /** Uloženie pollution. **/
+    private static void placePollution(
+            final Grid grid,
+            final List<GridPosition> pollutionPositions
+    ) {
+        for (final GridPosition position : pollutionPositions) {
+            final Card pollutionCard = grid.getCard(position).orElseThrow();
+            pollutionCard.putResources(List.of(Resource.Pollution));
+        }
     }
 }
