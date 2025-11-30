@@ -46,11 +46,43 @@ final class PileGenerator {
     }
 
     private static List<Card> deck1() {
-        return new ArrayList<>();
+        List<Card> cards = new ArrayList<>();
+        /*
+        cards.addAll(generateArbitrary(Resource.Money,4));
+        cards.addAll(generateArbitrary(Resource.Green,6));
+        cards.addAll(generateArbitrary(Resource.Red,6));
+        cards.addAll(generateArbitrary(Resource.Yellow,5));
+
+
+
+        Effect effect1 = new TransformationFixed(List.of(Resource.Green,Resource.Yellow,Resource.Red),
+                List.of(Resource.Green,Resource.Yellow,Resource.Red),0);
+        Effect effect2 = new TransformationFixed(List.of(Resource.Green,Resource.Yellow,Resource.Red))
+        EffectOr effectOr = new EffectOr();
+        */
+
+        return cards;
     }
 
 
     private static List<Card> deck2() {
         return new ArrayList<>();
     }
+/*
+    private static List<Card> generateArbitrary(Resource resource, int count){
+        int pollutionSpaces = 1;
+        if (resource.equals(Resource.Money)) pollutionSpaces = 0;
+
+        List<Card> cards = new ArrayList<>();
+        ArbitraryBasic arbitraryBasic = new ArbitraryBasic(List.of(resource));
+        for (int i = 0; i < count; i++) {
+            cards.add(new Card(Optional.empty(), Optional.of(arbitraryBasic), pollutionSpaces));
+        }
+        return cards;
+    }
+    private static List<Card> generateTransform() {
+        List<Card> cards = new ArrayList<>();
+
+    }
+*/
 }
