@@ -4,7 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
@@ -17,12 +19,13 @@ import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import static org.junit.Assert.*;
 
 public class CardTest {
-    private Card upperCard, lowerCard;
+    private Card cardWithUpperEffect, cardWithLowerEffect;
     private ArrayList<Resource> pollution, reds, car;
 
     @Before
     public void setUp() {
-        upperCard = new Card(Optional.empty(), Optional.of(new ArbitraryBasic(new ArrayList<>(List.of(Resource.Red)))),
+        cardWithUpperEffect = new Card(Optional.empty(),
+                Optional.of(new ArbitraryBasic(new ArrayList<>(List.of(Resource.Red)))),
                 1);
 
         ArrayList<Effect> lowerEffects = new ArrayList<>();
@@ -32,7 +35,7 @@ public class CardTest {
         lowerEffects.add(new Exchange(
                 new ArrayList<>(List.of(Resource.Red)),
                 new ArrayList<>(List.of(Resource.Green))));
-        lowerCard = new Card(Optional.of(new EffectOr(lowerEffects)), Optional.empty(), 1);
+        cardWithLowerEffect = new Card(Optional.of(new EffectOr(lowerEffects)), Optional.empty(), 1);
 
         pollution = new ArrayList<>(List.of(Resource.Pollution));
         reds = new ArrayList<>(List.of(Resource.Red, Resource.Red));
@@ -41,29 +44,46 @@ public class CardTest {
 
     @Test
     public void testPollution() {
-        assertEquals(true, upperCard.canPutResources(pollution));
-        upperCard.putResources(pollution);
-        assertEquals(true, upperCard.canGetResources(pollution));
-        upperCard.putResources(car);
-        upperCard.putResources(pollution);
-        assertEquals(false, upperCard.canPutResources(pollution));
-        assertEquals(false, upperCard.canGetResources(car));
-        upperCard.getResources(pollution);
-        assertEquals(true, upperCard.canPutResources(pollution));
+        assertEquals(true, cardWithUpperEffect.canPutResources(pollution));
+        cardWithUpperEffect.putResources(pollution);
+        assertEquals(true, cardWithUpperEffect.canGetResources(pollution));
+        cardWithUpperEffect.putResources(car);
+        cardWithUpperEffect.putResources(pollution);
+        assertEquals(false, cardWithUpperEffect.canPutResources(pollution));
+        assertEquals(false, cardWithUpperEffect.canGetResources(car));
+        cardWithUpperEffect.getResources(pollution);
+        assertEquals(true, cardWithUpperEffect.canPutResources(pollution));
     }
 
     @Test
     public void testPuttingGetting() {
-        lowerCard.putResources(reds);
-        lowerCard.putResources(car);
-        assertEquals(true, lowerCard.canGetResources(reds));
+        cardWithLowerEffect.putResources(reds);
+        cardWithLowerEffect.putResources(car);
+        assertEquals(true, cardWithLowerEffect.canGetResources(reds));
         reds.add(Resource.Car);
-        assertEquals(true, lowerCard.canGetResources(reds));
+        assertEquals(true, cardWithLowerEffect.canGetResources(reds));
         reds.add(Resource.Car);
-        assertEquals(false, lowerCard.canGetResources(reds));
-        lowerCard.putResources(car);
-        assertEquals(true, lowerCard.canGetResources(reds));
-        lowerCard.getResources(car);
-        assertEquals(false, lowerCard.canGetResources(reds));
+        assertEquals(false, cardWithLowerEffect.canGetResources(reds));
+        cardWithLowerEffect.putResources(car);
+        assertEquals(true, cardWithLowerEffect.canGetResources(reds));
+        cardWithLowerEffect.getResources(car);
+        assertEquals(false, cardWithLowerEffect.canGetResources(reds));
+    }
+
+    @Test
+    public void testResourcesOnCard() {
+        cardWithLowerEffect.putResources(reds);
+        cardWithLowerEffect.putResources(car);
+        cardWithLowerEffect.putResources(pollution);
+        Map<Resource, Integer> expectedCounts = new HashMap<>();
+        expectedCounts.put(Resource.Red, 2);
+        expectedCounts.put(Resource.Car, 1);
+        expectedCounts.put(Resource.Pollution, 1);
+
+        Map<Resource, Integer> realCounts = new HashMap<>();
+        for (Resource resource : cardWithLowerEffect.resourcesOnCard()) {
+            realCounts.put(resource, realCounts.getOrDefault(resource, 0) + 1);
+        }
+        assertEquals(true, expectedCounts.equals(realCounts));
     }
 }

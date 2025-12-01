@@ -1,9 +1,12 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Map.Entry;
+
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
@@ -94,10 +97,24 @@ public class Card {
     }
 
     /**
+     * Vrati vsetky resources na karte vratane vsetkych pollutions na tejto karte.
+     * (nic nezmeni, iba vrati list).
+     **/
+    public List<Resource> resourcesOnCard() {
+        List<Resource> resources = new ArrayList<>();
+        for (Entry<Resource, Integer> entry : this.resources.entrySet()) {
+            for (int i = 0; i < entry.getValue(); i++) {
+                resources.add(entry.getKey());
+            }
+        }
+        return resources;
+    }
+
+    /**
      * Zisti ci je mozne vyrobit pouzitim horneho efektu karty z danych input
      * resources output resources.
      **/
-    public boolean checkUpper(List<Resource> input, List<Resource> output, int pollution) {
+    public boolean checkUpper(final List<Resource> input, final List<Resource> output, final int pollution) {
         return upperEffect.isPresent() && upperEffect.get().check(input, output, pollution);
     }
 
@@ -105,7 +122,7 @@ public class Card {
      * Zisti ci je mozne vyrobit pouzitim dolneho efektu karty z danych input
      * resources output resources.
      **/
-    public boolean checkLower(List<Resource> input, List<Resource> output, int pollution) {
+    public boolean checkLower(final List<Resource> input, final List<Resource> output, final int pollution) {
         return lowerEffect.isPresent() && lowerEffect.get().check(input, output, pollution);
     }
 
@@ -131,6 +148,13 @@ public class Card {
         return json.toString();
     }
 
+    /**
+     * Zisti ci karta je cist (teda ci neobsahuje viac pollution ako moze).
+     **/
+    public boolean isClear() {
+        return this.resources.get(Resource.Pollution) <= pollutionSpaces;
+    }
+
     private static void putOptionalEffectToJSON(JSONObject json, String key, Optional<Effect> effect) {
         if (effect.isPresent()) {
             json.put(key, effect.get().state());
@@ -145,9 +169,5 @@ public class Card {
             result.put(resource, 0);
         }
         return result;
-    }
-
-    private boolean isClear() {
-        return this.resources.get(Resource.Pollution) <= pollutionSpaces;
     }
 }
