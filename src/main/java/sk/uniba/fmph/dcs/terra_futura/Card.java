@@ -143,9 +143,19 @@ public class Card {
         JSONObject json = new JSONObject();
         json.put("resources", new JSONObject(this.resources));
         json.put("lowerEffect", lowerEffect);
-        json.put("upperEffect", lowerEffect);
+        json.put("upperEffect", upperEffect);
+        putOptionalEffectToJSON(json, "lowerEffect", lowerEffect);
+        putOptionalEffectToJSON(json, "upperEffect", upperEffect);
         json.put("pollutionSpaces", pollutionSpaces);
         return json.toString();
+    }
+
+    private static void putOptionalEffectToJSON(JSONObject json, String key, Optional<Effect> effect) {
+        if (effect.isPresent()) {
+            json.put(key, Optional.of(effect.get().state()));
+        } else {
+            json.put(key, effect);
+        }
     }
 
     /**

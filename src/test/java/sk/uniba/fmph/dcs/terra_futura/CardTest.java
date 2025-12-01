@@ -83,7 +83,7 @@ public class CardTest {
     public void testState() {
         JSONObject json = new JSONObject(card.state());
         assertEquals("Optional.empty", json.get("lowerEffect"));
-        assertEquals("Optional.empty", json.get("upperEffect"));
+        assertEquals("Optional[FakeEffect]", json.get("upperEffect"));
         assertEquals(0, new JSONObject(json.get("resources").toString()).get("Red"));
         assertEquals(0, new JSONObject(json.get("resources").toString()).get("Car"));
         assertEquals(0, new JSONObject(json.get("resources").toString()).get("Pollution"));
