@@ -53,12 +53,8 @@ public class MoveCardTest {
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
-        try {
-            moveCard.moveCard(pile, 0, gridPosition, grid);
-            moveCard.moveCard(pile, 3, gridPosition, grid);
-        } catch (IllegalArgumentException e) {
-            Assert.assertNotEquals("Card index out of range <0;3>", e.getMessage());
-        }
+        Assert.assertTrue(moveCard.moveCard(pile,0, gridPosition, grid));
+        Assert.assertTrue(moveCard.moveCard(pile,3, gridPosition, grid));
 
     }
 
@@ -68,11 +64,7 @@ public class MoveCardTest {
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
-        try {
-            moveCard.moveCard(pile,-1, gridPosition, grid);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Card index out of range <0;3>", e.getMessage());
-        }
+        Assert.assertFalse(moveCard.moveCard(pile,-1, gridPosition, grid));
     }
 
     @Test
@@ -81,11 +73,7 @@ public class MoveCardTest {
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
-        try {
-            moveCard.moveCard(pile, 4,  gridPosition, grid);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Card index out of range <0;3>", e.getMessage());
-        }
+        Assert.assertFalse(moveCard.moveCard(pile,4, gridPosition, grid));
     }
 
     @Test
@@ -96,11 +84,7 @@ public class MoveCardTest {
         gridPosition = new GridPosition(0,0);
         pile.cardPresent = false;
         int index = 1;
-        try {
-            moveCard.moveCard(pile, index, gridPosition, grid);
-        } catch (IllegalStateException e) {
-            Assert.assertEquals("There is no card at index:" + index + ".", e.getMessage());
-        }
+        Assert.assertFalse(moveCard.moveCard(pile, index, gridPosition, grid));
     }
 
     @Test
@@ -111,11 +95,7 @@ public class MoveCardTest {
         gridPosition = new GridPosition(0,0);
         int index = 1;
         grid.accept = false;
-        try {
-            moveCard.moveCard(pile, index, gridPosition, grid);
-        } catch (IllegalStateException e) {
-            Assert.assertEquals("Cannot put card at " + gridPosition, e.getMessage());
-        }
+        Assert.assertFalse(moveCard.moveCard(pile, index, gridPosition, grid));
     }
 
     @Test
@@ -125,7 +105,6 @@ public class MoveCardTest {
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         int index = 2;
-        boolean result = moveCard.moveCard(pile, index, gridPosition, grid);
-        Assert.assertTrue(result);
+        Assert.assertTrue(moveCard.moveCard(pile, index, gridPosition, grid));
     }
 }
