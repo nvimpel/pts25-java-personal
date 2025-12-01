@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
 
 public class ProcessActionAssistance {
-    public boolean activateCard(Card card, Grid grid, int assistingPlayer,
+    static boolean activateCard(GridPosition cardPosition, Grid grid, int assistingPlayer,
             List<SimpleEntry<Resource, GridPosition>> inputs,
-            List<SimpleEntry<Resource, GridPosition>> outputs,
+            List<Resource> outputs,
             List<GridPosition> pollution) {
         return false;
     }

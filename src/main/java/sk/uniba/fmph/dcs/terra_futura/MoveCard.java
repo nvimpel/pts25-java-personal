@@ -13,8 +13,9 @@ public final class MoveCard {
     }
     /**
      * Metoda zistuje ci je premiestnenie validne.
-     * @param pile musi obsahovat na indexe cardIndex nejaku kartu
-     * @param cardIndex musi byt v rozsahu <0;3>
+     * 
+     * @param pile       musi obsahovat na indexe cardIndex nejaku kartu
+     * @param cardIndex  musi byt v rozsahu <0;3>
      * @param coordinate musi byt validny na vlozenie karty do gridu, to riesi grid
      * @param grid samotny grid
      * @return true ak sa posun podaril a false ak nie alebo vinimku ak je nejaky argument null
@@ -44,4 +45,3 @@ public final class MoveCard {
         }
     }
 }
-
