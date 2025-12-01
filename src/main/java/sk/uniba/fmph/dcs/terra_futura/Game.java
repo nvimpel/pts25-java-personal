@@ -92,11 +92,15 @@ class Game implements TerraFuturaInterface {
             return false;
         }
         boolean result;
-        if(otherPlayerId.isPresent()){
+        if(otherPlayerId.isPresent() && otherPos.isPresent()){
+            Optional<Card> assistingCard = players.get(otherPlayerId.get()).getGrid().getCard(otherPos.get());
+            if(assistingCard.isEmpty()){
+                return  false;
+            }
             assistingPlayer = otherPlayerId.get();
-            result = ProcessActionAssistance.activateCard(cardPosition,
-                    players.get(playerId).getGrid(), otherPlayerId.get(),
-                    inputs, outputs, pollution);
+            result = ProcessActionAssistance.activateCard(assistingCard.get(),
+                    cardPosition, players.get(playerId).getGrid(),
+                    otherPlayerId.get(), inputs, outputs, pollution);
             if(result){
                 state = GameState.SelectReward;
             }

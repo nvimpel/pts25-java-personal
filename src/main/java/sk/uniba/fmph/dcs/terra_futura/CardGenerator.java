@@ -55,6 +55,16 @@ final class CardGenerator {
         return deck2();
     }
 
+    public static ScoringMethod generateScoringCard(){
+        List<Resource> requiredCombination =  new ArrayList<>();
+        return new ScoringMethod(requiredCombination,0);
+    }
+
+    public static ActivationPattern generateActivationPattern(Grid grid) {
+        Collection<GridPosition> pattern = new ArrayList<>();
+        return new ActivationPattern(grid,pattern);
+    }
+
     private static List<Card> deck1() {
         List<Card> cards = new ArrayList<>();
 
@@ -218,15 +228,7 @@ final class CardGenerator {
 
     }
 
-    public static ScoringMethod generateScoringCard(){
-        List<Resource> requiredCombination =  new ArrayList<>();
-        return new ScoringMethod(requiredCombination,0);
-    }
 
-    public static ActivationPattern generateActivationPattern(Grid grid) {
-        Collection<GridPosition> pattern = new ArrayList<>();
-        return new ActivationPattern(grid,pattern);
-    }
 
     private static List<Card> generateArbitrary(Resource resource, int count){
         int pollutionSpaces = 1;
