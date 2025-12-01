@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
-import static sk.uniba.fmph.dcs.terra_futura.PileGenerator.pileGenerator;
+import static sk.uniba.fmph.dcs.terra_futura.CardGenerator.pileGenerator;
 
 
 

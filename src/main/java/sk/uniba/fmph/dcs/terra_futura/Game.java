@@ -40,7 +40,7 @@ class Game implements TerraFuturaInterface {
 
     private Player generatePlayer() {
         Grid grid = new Grid();
-        Collection<SimpleEntry<Integer, Integer>> pattern = new ArrayList<>();
+        Collection<GridPosition> pattern = new ArrayList<>();
         ActivationPattern pattern1 = new ActivationPattern(grid,pattern);
         ActivationPattern pattern2 = new ActivationPattern(grid,pattern);
         List<Resource> requiredCombination =  new ArrayList<>();
@@ -62,7 +62,7 @@ class Game implements TerraFuturaInterface {
             return false;
         }
         return MoveCard.moveCard(getPile(source.deck()), source.index(), destination,
-                players.get(playersIDs.indexOf(playerId)).getGrid());
+                getPlayer(playerId).getGrid());
 
     }
 
@@ -95,12 +95,12 @@ class Game implements TerraFuturaInterface {
         if(otherPlayerId.isPresent()){
             assistingPlayer = otherPlayerId.get();
             result = ProcessActionAssistance.activateCard(cardPosition,
-                    players.get(playerId).getGrid(), otherPlayerId.get(),
+                    getPlayer(playerId).getGrid(), otherPlayerId.get(),
                     inputs, outputs, pollution);
         }
         else {
             result =  ProcessAction.activateCard(cardPosition,
-                    players.get(playerId).getGrid(), inputs,
+                    getPlayer(playerId).getGrid(), inputs,
                     outputs, pollution);
 
         }
@@ -136,7 +136,7 @@ class Game implements TerraFuturaInterface {
             return false;
         }
         state = GameState.TakeCardNoCardDiscarded;
-        players.get(playersIDs.indexOf(playerId)).getGrid().endTurn();
+        getPlayer(playerId).getGrid().endTurn();
         onTurn = playersIDs.get((playersIDs.indexOf(playerId) + 1) % playersIDs.size());
         if(onTurn == startingPlayer){
             turnNumber++;
@@ -162,7 +162,7 @@ class Game implements TerraFuturaInterface {
         if(card != 1 && card != 2){
             return false;
         }
-        Player player = players.get(playersIDs.indexOf(playerId));
+        Player player = getPlayer(playerId);
         if(card == 1){
             player.getActivationPattern1().select();
         } else {
@@ -178,10 +178,14 @@ class Game implements TerraFuturaInterface {
         return false;
     }
 
-    private Pile getPile(Deck deck){
+    private Pile getPile(Deck deck) {
         if (deck == Deck.I){
             return pile1;
         }
         else return pile2;
+    }
+
+    private Player getPlayer(int platerID) {
+        return players.get(playersIDs.indexOf(platerID));
     }
 }

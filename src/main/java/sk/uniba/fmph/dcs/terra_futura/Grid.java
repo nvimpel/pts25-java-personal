@@ -5,11 +5,7 @@ import sk.uniba.fmph.dcs.terra_futura.effects.ArbitraryBasic;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Optional;
+import java.util.*;
 
 
 public class Grid implements InterfaceActivateGrid {
@@ -94,7 +90,7 @@ public class Grid implements InterfaceActivateGrid {
     }
 
     @Override
-    public void setActivationPattern(final List<GridPosition> pattern) {
+    public void setActivationPattern(final Collection<GridPosition> pattern) {
         for (GridPosition coordinate : pattern) {
             activable.add(new GridPosition(coordinate.x(), coordinate.y()));
         }

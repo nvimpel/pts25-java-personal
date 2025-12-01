@@ -37,8 +37,8 @@ import java.util.Optional;
 //----------------------------
 //Nie je cele implementovane, generujeme aspon par kariet aby nam zbehly testy
 //----------------------------
-final class PileGenerator {
-    private PileGenerator() {
+final class CardGenerator {
+    private CardGenerator() {
         throw new AssertionError("PileGenerator instances forbidden!");
     }
     public static List<Card> pileGenerator(final Deck deck) {
