@@ -1,9 +1,10 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
 import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
-import sk.uniba.fmph.dcs.terra_futura.effects.ArbitraryBasic;
+import sk.uniba.fmph.dcs.terra_futura.effects.*;
 import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
+import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,19 +64,96 @@ final class CardGenerator {
         cards.addAll(generateArbitrary(Resource.Yellow,5));
 
 
-        /*
-        Effect effect1 = new TransformationFixed(List.of(Resource.Green,Resource.Yellow,Resource.Red),
-                List.of(Resource.Green,Resource.Yellow,Resource.Red),0);
-        Effect effect2 = new TransformationFixed(List.of(Resource.Green,Resource.Yellow,Resource.Red));
-        EffectOr effectOr = new EffectOr();
-        */
+        Effect effect1 = new MaterialsToMaterials(1,1,0);
+        Effect effect2 = new MaterialsToMaterials(1,2,1);
+        Effect effectOr = new EffectOr(List.of(effect1, effect2));
+
+        Card card1 = new Card(Optional.of(effectOr),Optional.empty(), 2);
+        Card card2 = new Card(Optional.of(effectOr),Optional.empty(), 2);
+        cards.addAll(List.of(card1,card2));
+
 
         return cards;
     }
 
 
     private static List<Card> deck2() {
-        return new ArrayList<>();
+        List<Card> cards = new ArrayList<>();
+        Effect effect1 = new TransformationFixed(List.of(Resource.Money),List.of(Resource.Bulb),1);
+        Effect effect2 = new Exchange(List.of(Resource.Bulb, Resource.Car, Resource.Gear),
+                List.of(Resource.Gear, Resource.Car, Resource.Gear));
+        Effect effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+        effect1 = new TransformationFixed(List.of(Resource.Money),List.of(Resource.Gear),1);
+        effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+        effect1 = new TransformationFixed(List.of(Resource.Money),List.of(Resource.Car),1);
+        effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+
+        effect1 = new MaterialExchange(2, List.of(Resource.Bulb),1);
+        cards.add(new Card(Optional.of(effect1),Optional.empty(), 0));
+        effect1 = new MaterialExchange(2, List.of(Resource.Gear),1);
+        cards.add(new Card(Optional.of(effect1),Optional.empty(), 0));
+        effect1 = new MaterialExchange(3, List.of(Resource.Car),1);
+        cards.add(new Card(Optional.of(effect1),Optional.empty(), 0));
+
+        cards.addAll(bulkCreate(Optional.empty(),Optional.empty(),3,3));
+
+        effect1 = new MaterialExchange(3, List.of(Resource.Gear,Resource.Car,Resource.Bulb),0);
+        cards.addAll(bulkCreate(Optional.of(effect1),Optional.empty(),0,3));
+
+        effect1 = new TransformationFixed(List.of(Resource.Green, Resource.Green),List.of(Resource.Bulb),0);
+        effect2 = new TransformationFixed(List.of(Resource.Green),List.of(Resource.Bulb),1);
+        effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+
+        effect1 = new TransformationFixed(List.of(Resource.Red, Resource.Red),List.of(Resource.Gear),0);
+        effect2 = new TransformationFixed(List.of(Resource.Red),List.of(Resource.Gear),1);
+        effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+
+        effect1 = new TransformationFixed(List.of(Resource.Yellow, Resource.Yellow, Resource.Red),
+                List.of(Resource.Bulb),0);
+        effect2 = new TransformationFixed(List.of(Resource.Yellow, Resource.Red),List.of(Resource.Bulb),1);
+        effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+
+        effect1 = new TransformationFixed(List.of(Resource.Money), List.of(Resource.Green, Resource.Green),0);
+        effect2 = new TransformationFixed(List.of(Resource.Money),
+                List.of(Resource.Green, Resource.Green,Resource.Green),1);
+        effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.add(new Card(Optional.of(effectOr),Optional.empty(), 0));
+
+        effect1 = new TransformationFixed(List.of(Resource.Money), List.of(Resource.Red, Resource.Red),0);
+        effect2 = new TransformationFixed(List.of(Resource.Money),
+                List.of(Resource.Red, Resource.Red,Resource.Red),1);
+        effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.add(new Card(Optional.of(effectOr),Optional.empty(), 0));
+
+        effect1 = new TransformationFixed(List.of(Resource.Money), List.of(Resource.Yellow, Resource.Yellow),0);
+        effect2 = new TransformationFixed(List.of(Resource.Money),
+                List.of(Resource.Yellow, Resource.Yellow,Resource.Yellow),1);
+        effectOr = new EffectOr(List.of(effect1, effect2));
+        cards.add(new Card(Optional.of(effectOr),Optional.empty(), 0));
+
+        effect1 = new TransformationFixed(List.of(Resource.Money,Resource.Money), List.of(Resource.Bulb),1);
+        effect2 = new TransformationFixed(List.of(Resource.Money,Resource.Money),List.of(Resource.Gear),1);
+        Effect effect3 = new TransformationFixed(List.of(Resource.Money,Resource.Money),
+                List.of(Resource.Car),1);
+        effectOr = new EffectOr(List.of(effect1, effect2,effect3));
+        cards.add(new Card(Optional.of(effectOr),Optional.empty(), 0));
+
+    }
+
+    private static List<Card> bulkCreate(Optional<Effect> lowerEffect, Optional<Effect> upperEffect,
+                                         int pollutionSpaces, int repetitions) {
+        List<Card> cards = new ArrayList<>();
+        for (int i = 0; i < repetitions; i++) {
+            cards.add(new Card(lowerEffect, upperEffect, pollutionSpaces));
+        }
+        return cards;
+
     }
 
     public static ScoringMethod generateScoringCard(){
@@ -85,7 +163,7 @@ final class CardGenerator {
 
     public static ActivationPattern generateActivationPattern(Grid grid) {
         Collection<GridPosition> pattern = new ArrayList<>();
-        ActivationPattern pattern1 = new ActivationPattern(grid,pattern);
+        return new ActivationPattern(grid,pattern);
     }
 
     private static List<Card> generateArbitrary(Resource resource, int count){
