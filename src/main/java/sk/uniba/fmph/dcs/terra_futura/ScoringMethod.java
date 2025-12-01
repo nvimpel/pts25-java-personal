@@ -65,6 +65,8 @@ public class ScoringMethod {
         this.calculatedTotal = Optional.of(totalScore);
     }
 
+
+
     /**
      * returns a string representation of the final calculated score, or N/A if not calculated.
      *
@@ -73,4 +75,15 @@ public class ScoringMethod {
     public String state() {
         return calculatedTotal.map(Object::toString).orElse("not calculated");
     }
+
+    /**
+     * returns the final calculated score wrapped in an Optional.
+     * The Optional will be empty if the score has not been calculated yet.
+     *
+     * @return an Optional containing the final calculated score, or an empty Optional.
+     */
+    public Optional<Integer> getFinalPoints() {
+        return calculatedTotal;
+    }
+
 }
