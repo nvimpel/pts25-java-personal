@@ -3,6 +3,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 import sk.uniba.fmph.dcs.terra_futura.effects.EffectOr;
+import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -16,6 +18,10 @@ public class MoveCardTest {
         boolean cardPresent = true;
         Card testCard = new Card(Optional.of(new EffectOr(new ArrayList<>())), Optional.of(new EffectOr(new ArrayList<>())), 0);
         Card takenCard = null;
+
+        public FakePile(Deck deck) {
+            super(deck);
+        }
 
         @Override
         public Optional<Card> getCard(int index) {
@@ -60,7 +66,7 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_GridIsNullTest() {
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = null;
         gridPosition = new GridPosition(0, 0);
         try {
@@ -72,7 +78,7 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_GridPositionIsNullTest() {
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = null;
         try {
@@ -84,7 +90,7 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_edgeIndicesValidTest() {
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         Assert.assertTrue(MoveCard.moveCard(pile,0, gridPosition, grid));
@@ -94,7 +100,7 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_InvalidIndexLowerBoundTest() {
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         Assert.assertFalse(MoveCard.moveCard(pile,-1, gridPosition, grid));
@@ -102,7 +108,7 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_InvalidIndexUpperBoundTest() {
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         Assert.assertFalse(MoveCard.moveCard(pile,4, gridPosition, grid));
@@ -110,7 +116,7 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_CardNotPresentInPileTest() {
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         pile.cardPresent = false;
@@ -120,7 +126,7 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_CannotPutCardOnGridTest() {
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         int index = 1;
@@ -130,7 +136,7 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_SuccessTest() {
-        pile = new FakePile();
+        pile = new FakePile(Deck.I);
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         int index = 2;

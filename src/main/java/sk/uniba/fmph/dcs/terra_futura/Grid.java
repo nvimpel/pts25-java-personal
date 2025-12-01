@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.Optional;
 
 
-public class Grid {
+public class Grid implements InterfaceActivateGrid {
     private final ArrayList<ArrayList<Card>> grid = new ArrayList<>();
     private static final int MAXIMAL_GRID_LENGTH = 5;
     private static final int GRID_OFFSET = 2;
@@ -93,6 +93,7 @@ public class Grid {
         activable.remove(coordinate);
     }
 
+    @Override
     public void setActivationPattern(final List<GridPosition> pattern) {
         for (GridPosition coordinate : pattern) {
             activable.add(new GridPosition(coordinate.x(), coordinate.y()));
