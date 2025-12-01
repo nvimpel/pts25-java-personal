@@ -34,15 +34,30 @@ public final class ProcessAction {
             return false;
         }
 
+        List<Resource> inputResources = inputs.stream().map(SimpleEntry::getKey).toList();
+        boolean isEffectValid =
+                card.checkUpper(inputResources, outputs, pollution.size())
+                || card.checkLower(inputResources, outputs, pollution.size());
+        if (!isEffectValid) {
+            return false;
+        }
+
         boolean wasRemoveValid = removeResources(grid, inputs);
         if (!wasRemoveValid) {
             return false;
         }
-        card.putResources(outputs);
+
+        try {
+            card.putResources(outputs);
+        } catch (RuntimeException e) {
+            return false;
+        }
+
         boolean wasPollutionValid = placePollution(grid, pollution);
         if (!wasPollutionValid) {
             return false;
         }
+
         grid.setActivated(cardPosition);
 
         return true;

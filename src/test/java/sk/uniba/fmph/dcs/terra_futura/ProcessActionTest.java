@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 import sk.uniba.fmph.dcs.terra_futura.effects.ArbitraryBasic;
-import sk.uniba.fmph.dcs.terra_futura.effects.Exchange;
+import sk.uniba.fmph.dcs.terra_futura.effects.TransformationFixed;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 
 import java.util.AbstractMap;
@@ -27,8 +27,8 @@ public class ProcessActionTest {
         );
         this.c21.putResources(List.of(Resource.Red, Resource.Red,  Resource.Pollution));
         this.c11 = new Card(
-                Optional.of(new Exchange(List.of(Resource.Red), List.of(Resource.Gear, Resource.Pollution))),
-                Optional.of(new Exchange(List.of(Resource.Red, Resource.Red), List.of(Resource.Gear))),
+                Optional.of(new TransformationFixed(List.of(Resource.Red), List.of(Resource.Gear), 1)),
+                Optional.of(new TransformationFixed(List.of(Resource.Red, Resource.Red), List.of(Resource.Gear), 0)),
                 0
         );
 
@@ -87,5 +87,19 @@ public class ProcessActionTest {
         assertFalse(outcomeCard21);
         assertTrue(c21.state().contains("\"Red\":2"));
         assertTrue(c21.state().contains("\"Pollution\":2"));
+    }
+
+    @Test
+    public void testEffectIsNotValid() {
+        this.c21.putResources(List.of(Resource.Pollution));
+        boolean outcomeCard21 = ProcessAction.activateCard(
+                new GridPosition(2,1),
+                grid,
+                List.of(),
+                List.of(Resource.Yellow),
+                List.of()
+        );
+
+        assertFalse(outcomeCard21);
     }
 }

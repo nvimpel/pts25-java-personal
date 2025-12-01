@@ -44,7 +44,11 @@ final class ProcessActionUtils {
                 return false;
             }
             Card pollutionCard = pollutionCardOpt.get();
-            pollutionCard.putResources(List.of(Resource.Pollution));
+            try {
+                pollutionCard.putResources(List.of(Resource.Pollution));
+            } catch (RuntimeException e) {
+                return false;
+            }
         }
         return true;
     }
