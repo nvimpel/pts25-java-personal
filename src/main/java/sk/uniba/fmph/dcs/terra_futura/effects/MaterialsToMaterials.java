@@ -8,13 +8,14 @@ import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 import java.util.List;
 
 /**
- * Implementácia efektu, ktory vie vymenit n lubovolnych materialov (green,red,yellow)
- * {@code check} skontroluje ci {@code List<Resource> input} obsahuje
- * presne n prvkov, a ci su tieto prvky resources.
- * {@code List<Resource> output} moze obsahovat iba m prvkov a musia to byt materialy
- * * {@code pollution} musi sediet presne
- *
- **/
+ * Implementácia efektu, ktorý dokáže vymeniť n ľubovoľných materiálov (green, red, yellow) z
+ * a m ľubovoľných materiálov.
+ * {@code check} overuje, či {@code List<Resource> input} obsahuje presne n prvkov
+ * a či sú všetky tieto prvky typu Resource.
+ * {@code List<Resource> output} musi obsahovať presne m prvkov a všetky musia byť materiály.
+ * {@code pollution} musí presne zodpovedať požadovanej hodnote.
+ */
+
 public final class MaterialsToMaterials implements Effect {
     private final int from;
     private final int to;
@@ -37,23 +38,12 @@ public final class MaterialsToMaterials implements Effect {
         if (this.pollution != pollution) {
             return false;
         }
-        if (containsNonMaterial(input)) {
+        if (EffectUtil.containsNonMaterial(input)) {
             return false;
         }
-        return !containsNonMaterial(output);
+        return !EffectUtil.containsNonMaterial(output);
 
     }
-
-    private boolean containsNonMaterial(final List<Resource> list) {
-        List<Resource> materials = List.of(Resource.Green, Resource.Red, Resource.Yellow);
-        for (Resource resource : list) {
-            if (!materials.contains(resource)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     @Override
     public boolean hasAssistance() {

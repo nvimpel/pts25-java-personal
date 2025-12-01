@@ -8,20 +8,24 @@ import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 import java.util.List;
 
 /**
- * Implementácia efektu, ktory vie vymenit n lubovolnych materialov (green,red,yellow)
- * pretransformovat na jeden lubovolny resource z listu {@code to} ktory je dany konstruktoru
- * {@code check} skontroluje ci {@code List<Resource> input} obsahuje
- * presne n prvkov, a ci su tieto prvky resources.
- * {@code List<Resource> output} moze obsahovat iba jeden resourece a musi sa zhodovat s {@code to}
- * {@code pollution} musi sediet podla efektu
- *
- **/
+ * Implementácia efektu, ktorý dokáže vymeniť ľubovoľných n materiálov
+ * (green, red, yellow) za jeden ľubovoľný resource zo zoznamu {@code to},
+ * ktorý je zadaný v konštruktore.
+ * {@code check} overuje, či {@code List<Resource> input} obsahuje presne n prvkov
+ * a či sú všetky tieto prvky typu Resource.
+ * {@code List<Resource> output} môže obsahovať iba jeden prvok a tento prvok
+ * sa musí zhodovať s niektorým zo zoznamu {@code to}.
+ * {@code pollution} musí zodpovedať hodnotám definovaným pre daný efekt.
+ */
 public final class MaterialExchange implements Effect {
     private final int from;
     private final List<Resource> to;
     private final int pollution;
 
     public MaterialExchange(final int from, final List<Resource> to, final int pollution) {
+        if (to == null) {
+            throw new IllegalArgumentException("to must not be null");
+        }
         this.from = from;
         this.to = List.copyOf(to);
         this.pollution = pollution;
@@ -42,20 +46,10 @@ public final class MaterialExchange implements Effect {
             return false;
         }
 
-        if (containsNonMaterial(input)) {
+        if (EffectUtil.containsNonMaterial(input)) {
             return false;
         }
         return to.contains(output.getFirst());
-    }
-
-    private boolean containsNonMaterial(final List<Resource> list) {
-        List<Resource> materials = List.of(Resource.Green, Resource.Red, Resource.Yellow);
-        for (Resource resource : list) {
-            if (!materials.contains(resource)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
