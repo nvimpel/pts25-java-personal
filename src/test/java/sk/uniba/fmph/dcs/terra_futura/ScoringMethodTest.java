@@ -8,6 +8,7 @@ import org.junit.Before;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class ScoringMethodTest {
     private final List<Resource> requiredCombination = List.of(Resource.Car, Resource.Gear, Resource.Gear);
@@ -128,4 +129,30 @@ public class ScoringMethodTest {
         Assert.assertEquals("5", scoringMethod.state());
     }
 
+    @Test
+    public void testGetFinalPoints_BeforeCalculation() {
+        Optional<Integer> result = scoringMethod.getFinalPoints();
+        Assert.assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testGetFinalPoints_AfterCalculationWithScore() {
+        List<Resource> playerResources = Arrays.asList(Resource.Car, Resource.Gear, Resource.Gear);
+        scoringMethod.selectThisMethodAndCalculate(playerResources);
+
+        Optional<Integer> result = scoringMethod.getFinalPoints();
+        Assert.assertTrue(result.isPresent());
+        Assert.assertEquals(Integer.valueOf(pointsPerCombination), result.get());
+    }
+
+    @Test
+    public void testGetFinalPoints_AfterCalculationWithZeroScore() {
+        // The required combination is not met, resulting in 0 points
+        List<Resource> playerResources = Arrays.asList(Resource.Yellow, Resource.Yellow, Resource.Yellow);
+        scoringMethod.selectThisMethodAndCalculate(playerResources);
+
+        Optional<Integer> result = scoringMethod.getFinalPoints();
+        Assert.assertTrue(result.isPresent());
+        Assert.assertEquals(Integer.valueOf(0), result.get());
+    }
 }
