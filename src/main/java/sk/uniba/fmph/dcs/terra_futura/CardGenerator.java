@@ -30,7 +30,7 @@ import java.util.Optional;
  * 2x: 4x any resource -> any product
  * 2x: 2x green -> bulb || green -> bulb + pollution
  * 2x: 2x red -> gear || red -> gear + pollution
- * 2x: 2x yellow + red -> car || yellow + red -> car
+ * 2x: 2x yellow + red -> car || yellow + red -> car + pollution
  * 1x: money -> 2x yellow || money -> 3x yellow + pollution
  * 1x: money -> 2x red || money -> 3x red + pollution
  * 1x: money -> 2x green || money -> 3x green + pollution
@@ -66,11 +66,9 @@ final class CardGenerator {
 
         Effect effect1 = new MaterialsToMaterials(1,1,0);
         Effect effect2 = new MaterialsToMaterials(1,2,1);
-        Effect effectOr = new EffectOr(List.of(effect1, effect2));
+        Effect effectOr = efOR(effect1,effect2);
 
-        Card card1 = new Card(Optional.of(effectOr),Optional.empty(), 2);
-        Card card2 = new Card(Optional.of(effectOr),Optional.empty(), 2);
-        cards.addAll(List.of(card1,card2));
+        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(), 2,2));
 
 
         return cards;
@@ -79,71 +77,135 @@ final class CardGenerator {
 
     private static List<Card> deck2() {
         List<Card> cards = new ArrayList<>();
-        Effect effect1 = new TransformationFixed(List.of(Resource.Money),List.of(Resource.Bulb),1);
-        Effect effect2 = new Exchange(List.of(Resource.Bulb, Resource.Car, Resource.Gear),
+
+        // 2x: money -> bulb + pollution || exchange
+        // 2x: money -> gear + pollution || exchange
+        // 2x: money -> car + 2x pollution || exchange
+        Effect effect = ex(List.of(Resource.Bulb, Resource.Car, Resource.Gear),
                 List.of(Resource.Gear, Resource.Car, Resource.Gear));
-        Effect effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
-        effect1 = new TransformationFixed(List.of(Resource.Money),List.of(Resource.Gear),1);
-        effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
-        effect1 = new TransformationFixed(List.of(Resource.Money),List.of(Resource.Car),1);
-        effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+        cards.addAll(bulkCreate(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Money),List.of(Resource.Bulb),1),
+                        effect
+                )
+        ),Optional.empty(),0,2));
+        cards.addAll(bulkCreate(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Money),List.of(Resource.Gear),1),
+                        effect
+                )
+        ),Optional.empty(),0,2));
+        cards.addAll(bulkCreate(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Money),List.of(Resource.Car),2),
+                        effect
+                )
+        ),Optional.empty(),0,2));
 
-        effect1 = new MaterialExchange(2, List.of(Resource.Bulb),1);
-        cards.add(new Card(Optional.of(effect1),Optional.empty(), 0));
-        effect1 = new MaterialExchange(2, List.of(Resource.Gear),1);
-        cards.add(new Card(Optional.of(effect1),Optional.empty(), 0));
-        effect1 = new MaterialExchange(3, List.of(Resource.Car),1);
-        cards.add(new Card(Optional.of(effect1),Optional.empty(), 0));
+        // 1x: 2x any -> gear + pollution
+        // 1x: 2x any -> bulb + pollution
+        // 1x: 3x any -> car + pollution
+        cards.add(new Card(Optional.of(
+                mx(2, List.of(Resource.Bulb),1)
+        ),Optional.empty(), 0));
+        cards.add(new Card(Optional.of(
+                mx(2, List.of(Resource.Gear),1)
+        ),Optional.empty(), 0));
+        cards.add(new Card(Optional.of(
+                mx(3, List.of(Resource.Car),1)
+        ),Optional.empty(), 0));
 
+        //polution collector
         cards.addAll(bulkCreate(Optional.empty(),Optional.empty(),3,3));
 
-        effect1 = new MaterialExchange(3, List.of(Resource.Gear,Resource.Car,Resource.Bulb),0);
-        cards.addAll(bulkCreate(Optional.of(effect1),Optional.empty(),0,3));
+        //4x any to material to any product
+        cards.addAll(bulkCreate(Optional.of(
+                mx(3, List.of(Resource.Gear,Resource.Car,Resource.Bulb),0)
+        ),Optional.empty(),0,3));
 
-        effect1 = new TransformationFixed(List.of(Resource.Green, Resource.Green),List.of(Resource.Bulb),0);
-        effect2 = new TransformationFixed(List.of(Resource.Green),List.of(Resource.Bulb),1);
-        effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+        //2x: 2x green -> bulb || green -> bulb + pollution
+        cards.addAll(bulkCreate(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Green, Resource.Green),
+                                List.of(Resource.Bulb),0),
+                        tfx(List.of(Resource.Green),List.of(Resource.Bulb),1)
+                )
+        ),Optional.empty(),0,2));
+        //2x: 2x red -> gear || red -> gear + pollution
+        cards.addAll(bulkCreate(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Red, Resource.Red),
+                                List.of(Resource.Gear),0),
+                        tfx(List.of(Resource.Red),List.of(Resource.Gear),1)
+                )
+        ),Optional.empty(),0,2));
 
-        effect1 = new TransformationFixed(List.of(Resource.Red, Resource.Red),List.of(Resource.Gear),0);
-        effect2 = new TransformationFixed(List.of(Resource.Red),List.of(Resource.Gear),1);
-        effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
 
-        effect1 = new TransformationFixed(List.of(Resource.Yellow, Resource.Yellow, Resource.Red),
-                List.of(Resource.Bulb),0);
-        effect2 = new TransformationFixed(List.of(Resource.Yellow, Resource.Red),List.of(Resource.Bulb),1);
-        effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.addAll(bulkCreate(Optional.of(effectOr),Optional.empty(),0,2));
+        //2x: 2x yellow + red -> car || yellow + red -> car + pollution
+        cards.addAll(bulkCreate(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Yellow, Resource.Yellow, Resource.Red),
+                                List.of(Resource.Bulb),0),
+                        tfx(List.of(Resource.Yellow, Resource.Red),List.of(Resource.Car),1)
+                )
+        ),Optional.empty(),0,2));
 
-        effect1 = new TransformationFixed(List.of(Resource.Money), List.of(Resource.Green, Resource.Green),0);
-        effect2 = new TransformationFixed(List.of(Resource.Money),
-                List.of(Resource.Green, Resource.Green,Resource.Green),1);
-        effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.add(new Card(Optional.of(effectOr),Optional.empty(), 0));
+        //1x money -> 2x red || money -> 3x red pollution
+        cards.add(new Card(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Money), List.of(Resource.Red, Resource.Red),0),
+                        tfx(List.of(Resource.Money), List.of(Resource.Red,
+                                Resource.Red,Resource.Red),1)
+                )), Optional.empty(),0
+        ));
+        //1x money -> 2x green || money -> 3x green + pollution
+        cards.add(new Card(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Money), List.of(Resource.Green, Resource.Green),0),
+                        tfx(List.of(Resource.Money), List.of(Resource.Green,
+                                Resource.Green,Resource.Green),1)
+                )), Optional.empty(),0
+        ));
+        //1x money -> 2x yellow || money -> 3x yellow + pollution
+        cards.add(new Card(Optional.of(
+                efOR(
+                        tfx(List.of(Resource.Money), List.of(Resource.Yellow, Resource.Yellow),0),
+                        tfx(List.of(Resource.Money), List.of(Resource.Yellow,
+                                Resource.Yellow,Resource.Yellow),1)
+                )), Optional.empty(),0
+        ));
 
-        effect1 = new TransformationFixed(List.of(Resource.Money), List.of(Resource.Red, Resource.Red),0);
-        effect2 = new TransformationFixed(List.of(Resource.Money),
-                List.of(Resource.Red, Resource.Red,Resource.Red),1);
-        effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.add(new Card(Optional.of(effectOr),Optional.empty(), 0));
+        //2x money -> whatever product + pollution
+        cards.add(new Card(Optional.of(
+                efOR(tfx(List.of(Resource.Money,Resource.Money), List.of(Resource.Bulb),1),
+                        tfx(List.of(Resource.Money,Resource.Money),List.of(Resource.Gear),1),
+                        tfx(List.of(Resource.Money,Resource.Money),List.of(Resource.Car),1)
+                )), Optional.empty(), 0
+        ));
 
-        effect1 = new TransformationFixed(List.of(Resource.Money), List.of(Resource.Yellow, Resource.Yellow),0);
-        effect2 = new TransformationFixed(List.of(Resource.Money),
-                List.of(Resource.Yellow, Resource.Yellow,Resource.Yellow),1);
-        effectOr = new EffectOr(List.of(effect1, effect2));
-        cards.add(new Card(Optional.of(effectOr),Optional.empty(), 0));
 
-        effect1 = new TransformationFixed(List.of(Resource.Money,Resource.Money), List.of(Resource.Bulb),1);
-        effect2 = new TransformationFixed(List.of(Resource.Money,Resource.Money),List.of(Resource.Gear),1);
-        Effect effect3 = new TransformationFixed(List.of(Resource.Money,Resource.Money),
-                List.of(Resource.Car),1);
-        effectOr = new EffectOr(List.of(effect1, effect2,effect3));
-        cards.add(new Card(Optional.of(effectOr),Optional.empty(), 0));
 
+        return cards;
+    }
+
+    //create tranformation fixed
+    private static Effect tfx(List<Resource> from, List<Resource> to, int pollution) {
+        return new TransformationFixed(from, to, pollution);
+    }
+
+    //EffectOR
+    private static Effect efOR(Effect... effects) {
+        return new EffectOr(List.of(effects));
+
+    }
+
+    private static Effect mx(int from, List<Resource> to, int pollution) {
+        return new MaterialExchange(from, to, pollution);
+    }
+
+    //exchabnge
+    private static Effect ex(List<Resource> from, List<Resource> to) {
+        return new Exchange(from, to);
     }
 
     private static List<Card> bulkCreate(Optional<Effect> lowerEffect, Optional<Effect> upperEffect,
@@ -177,12 +239,5 @@ final class CardGenerator {
         }
         return cards;
     }
-    /*
-    private static List<Card> generateTransform() {
-        List<Card> cards = new ArrayList<>();
-
-    }
-
-     */
 
 }
