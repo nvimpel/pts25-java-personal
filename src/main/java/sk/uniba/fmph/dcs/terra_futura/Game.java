@@ -11,11 +11,10 @@ import java.util.AbstractMap.SimpleEntry;
 class Game implements TerraFuturaInterface {
     GameState state = GameState.TakeCardNoCardDiscarded;
     SelectReward selectReward = new SelectReward();
-    int playersCount;
     int onTurn;
 
     List<Integer> playersIDs;
-    List<Player> players = new ArrayList<>();
+    Map<Integer,Player> players = new HashMap<>();
 
     int assistingPlayer;
 
@@ -29,11 +28,10 @@ class Game implements TerraFuturaInterface {
 
     public Game(int[] playersIDs, int playersCount, int startingPlayer) {
         this.playersIDs = Arrays.stream(playersIDs).boxed().toList();
-        this.playersCount = playersCount;
         this.startingPlayer = startingPlayer;
         onTurn = startingPlayer;
         for (int i = 0; i < playersCount; i++) {
-            players.add(generatePlayer());
+            players.put(this.playersIDs.get(i), generatePlayer());
         }
 
     }
@@ -59,7 +57,7 @@ class Game implements TerraFuturaInterface {
             return false;
         }
         boolean result = MoveCard.moveCard(getPile(source.deck()), source.index(), destination,
-                getPlayer(playerId).getGrid());
+                players.get(playerId).getGrid());
 
         if(result){
             state = GameState.ActivateCard;
@@ -97,12 +95,15 @@ class Game implements TerraFuturaInterface {
         if(otherPlayerId.isPresent()){
             assistingPlayer = otherPlayerId.get();
             result = ProcessActionAssistance.activateCard(cardPosition,
-                    getPlayer(playerId).getGrid(), otherPlayerId.get(),
+                    players.get(playerId).getGrid(), otherPlayerId.get(),
                     inputs, outputs, pollution);
+            if(result){
+                state = GameState.SelectReward;
+            }
         }
         else {
             result =  ProcessAction.activateCard(cardPosition,
-                    getPlayer(playerId).getGrid(), inputs,
+                    players.get(playerId).getGrid(), inputs,
                     outputs, pollution);
 
         }
@@ -139,7 +140,7 @@ class Game implements TerraFuturaInterface {
         }
         //Turn dostane dalsi hrac (ak sme v scoringu tak sa hrac meni az ked sa vyberu dve karty)
         if(actionCounter == 0){
-            onTurn = playersIDs.get((playersIDs.indexOf(playerId) + 1) % playersIDs.size());
+            onTurn = nextPlayer(onTurn);
         }
         //Ak turn dostal starting player viem ze zaciname dalsie kolo
         if (onTurn == startingPlayer && actionCounter == 0) {
@@ -160,8 +161,6 @@ class Game implements TerraFuturaInterface {
         } else if (turnNumber == 10) {
             state = GameState.SelectScoringMethod;
             actionCounter = 0;
-        } else if (turnNumber == 11) {
-            state = GameState.Finish;
         }
 
         return true;
@@ -178,7 +177,7 @@ class Game implements TerraFuturaInterface {
             return false;
         }
         actionCounter++;
-        Player player = getPlayer(playerId);
+        Player player = players.get(playerId);
         if(card == 1){
             player.getActivationPattern1().select();
         } else {
@@ -198,7 +197,7 @@ class Game implements TerraFuturaInterface {
             return false;
         }
         actionCounter++;
-        Player player = getPlayer(playerId);
+        Player player = players.get(playerId);
         int currentPoints = player.getPoints().orElse(0);
         List<Resource> playerResources = getAllResources(player);
         if(card == 1){
@@ -210,7 +209,7 @@ class Game implements TerraFuturaInterface {
         }
 
         if(actionCounter == 2){
-            onTurn = playersIDs.get(playersIDs.indexOf(playerId) + 1);
+            onTurn = nextPlayer(onTurn);
             actionCounter = 0;
             if(onTurn == startingPlayer){
                 calculateFinalPoints();
@@ -235,13 +234,16 @@ class Game implements TerraFuturaInterface {
         else return pile2;
     }
 
-    private Player getPlayer(int platerID) {
-        return players.get(playersIDs.indexOf(platerID));
+    private int nextPlayer(int currentPlayer) {
+        int index = playersIDs.indexOf(currentPlayer);
+        return playersIDs.get((index + 1) % playersIDs.size());
     }
 
 
+
+
     private void calculateFinalPoints(){
-        for(Player player : players){
+        for(Player player : players.values()){
             player.setPoints(player.getPoints().orElse(0) + finalPoints(player));
         }
     }
