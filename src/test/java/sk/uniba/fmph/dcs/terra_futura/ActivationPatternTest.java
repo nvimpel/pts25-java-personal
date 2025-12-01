@@ -7,7 +7,6 @@ import org.junit.Test;
 import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 
 import java.util.ArrayList;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
@@ -28,12 +27,11 @@ class ActivateGridFake implements InterfaceActivateGrid {
 public class ActivationPatternTest {
     private ActivateGridFake grid;
     private ActivationPattern activationPattern;
-    private ArrayList<GridPosition> patternEntries;
 
     @Before
     public void setUp() {
         grid = new ActivateGridFake();
-        patternEntries = new ArrayList<>();
+        ArrayList<GridPosition> patternEntries = new ArrayList<>();
         patternEntries.add(new GridPosition(0, 0));
         patternEntries.add(new GridPosition(0, 0));
         patternEntries.add(new GridPosition(-1, 1));

@@ -8,9 +8,9 @@ import org.json.JSONArray;
 import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 
 public final class ActivationPattern {
-    private ArrayList<GridPosition> pattern;
+    private final ArrayList<GridPosition> pattern;
     private boolean selected;
-    private InterfaceActivateGrid grid;
+    private final InterfaceActivateGrid grid;
 
     public ActivationPattern(final InterfaceActivateGrid grid,
             final Collection<GridPosition> pattern) {
