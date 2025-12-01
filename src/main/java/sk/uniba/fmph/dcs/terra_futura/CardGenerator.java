@@ -1,10 +1,12 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
+import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 import sk.uniba.fmph.dcs.terra_futura.effects.ArbitraryBasic;
 import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,6 +76,16 @@ final class CardGenerator {
 
     private static List<Card> deck2() {
         return new ArrayList<>();
+    }
+
+    public static ScoringMethod generateScoringCard(){
+        List<Resource> requiredCombination =  new ArrayList<>();
+        return new ScoringMethod(requiredCombination,0);
+    }
+
+    public static ActivationPattern generateActivationPattern(Grid grid) {
+        Collection<GridPosition> pattern = new ArrayList<>();
+        ActivationPattern pattern1 = new ActivationPattern(grid,pattern);
     }
 
     private static List<Card> generateArbitrary(Resource resource, int count){

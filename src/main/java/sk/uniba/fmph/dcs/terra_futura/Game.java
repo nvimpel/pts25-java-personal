@@ -23,7 +23,7 @@ class Game implements TerraFuturaInterface {
     Pile pile2 = new Pile(Deck.II);
 
     int startingPlayer;
-    int turnNumber = 0;
+    int turnNumber = 1;
 
     int actionCounter = 0;
 
@@ -40,15 +40,12 @@ class Game implements TerraFuturaInterface {
 
     private Player generatePlayer() {
         Grid grid = new Grid();
-        Collection<GridPosition> pattern = new ArrayList<>();
-        ActivationPattern pattern1 = new ActivationPattern(grid,pattern);
-        ActivationPattern pattern2 = new ActivationPattern(grid,pattern);
-        List<Resource> requiredCombination =  new ArrayList<>();
-        ScoringMethod scoringMethod1 = new ScoringMethod(requiredCombination,0);
-        ScoringMethod scoringMethod2 = new ScoringMethod(requiredCombination,0);
+
+
         return new Player(grid,
-                pattern1, pattern2,
-                scoringMethod1, scoringMethod2);
+                CardGenerator.generateActivationPattern(grid),
+                CardGenerator.generateActivationPattern(grid),
+                CardGenerator.generateScoringCard(), CardGenerator.generateScoringCard());
 
     }
 
@@ -61,8 +58,13 @@ class Game implements TerraFuturaInterface {
         if(onTurn != playerId){
             return false;
         }
-        return MoveCard.moveCard(getPile(source.deck()), source.index(), destination,
+        boolean result = MoveCard.moveCard(getPile(source.deck()), source.index(), destination,
                 getPlayer(playerId).getGrid());
+
+        if(result){
+            state = GameState.ActivateCard;
+        }
+        return result;
 
     }
 
@@ -135,22 +137,33 @@ class Game implements TerraFuturaInterface {
         if(onTurn != playerId){
             return false;
         }
-        state = GameState.TakeCardNoCardDiscarded;
-        getPlayer(playerId).getGrid().endTurn();
-        onTurn = playersIDs.get((playersIDs.indexOf(playerId) + 1) % playersIDs.size());
-        if(onTurn == startingPlayer){
+        //Turn dostane dalsi hrac (ak sme v scoringu tak sa hrac meni az ked sa vyberu dve karty)
+        if(actionCounter == 0){
+            onTurn = playersIDs.get((playersIDs.indexOf(playerId) + 1) % playersIDs.size());
+        }
+        //Ak turn dostal starting player viem ze zaciname dalsie kolo
+        if (onTurn == startingPlayer && actionCounter == 0) {
             turnNumber++;
         }
-        if (turnNumber == 9){
-            if(actionCounter == 0){
-                state = GameState.SelectActivationPattern;
-            } else if (actionCounter == 2){
-                state = GameState.SelectScoringMethod;
-            } else {
-                actionCounter = 0;
-
+        //Ak je turn < 9 stale vieme pridavat karty
+        //Na turn == 9 zacina dodatocan aktivacia
+        //Na turn == 10 sa vyhodnoti skore
+        if (turnNumber < 9){
+            state = GameState.TakeCardNoCardDiscarded;
+            return true;
+        } else if (turnNumber == 9) {
+            state = GameState.SelectActivationPattern;
+            if(actionCounter == 1) {
+                actionCounter = -1;
             }
+            return true;
+        } else if (turnNumber == 10) {
+            state = GameState.SelectScoringMethod;
+            actionCounter = 0;
+        } else if (turnNumber == 11) {
+            state = GameState.Finish;
         }
+
         return true;
 
 
@@ -158,10 +171,13 @@ class Game implements TerraFuturaInterface {
 
     @Override
     public boolean selectActivationPattern(int playerId, int card) {
-        actionCounter++;
         if(card != 1 && card != 2){
             return false;
         }
+        if(playerId != onTurn){
+            return false;
+        }
+        actionCounter++;
         Player player = getPlayer(playerId);
         if(card == 1){
             player.getActivationPattern1().select();
@@ -175,7 +191,41 @@ class Game implements TerraFuturaInterface {
 
     @Override
     public boolean selectScoring(int playerId, int card) {
-        return false;
+        if(card != 1 && card != 2){
+            return false;
+        }
+        if(playerId != onTurn){
+            return false;
+        }
+        actionCounter++;
+        Player player = getPlayer(playerId);
+        int currentPoints = player.getPoints().orElse(0);
+        List<Resource> playerResources = getAllResources(player);
+        if(card == 1){
+            player.getScoringMethod1().selectThisMethodAndCalculate(playerResources);
+            player.setPoints(player.getScoringMethod1().getFinalPoints().orElse(0) + currentPoints);
+        } else {
+            player.getScoringMethod2().selectThisMethodAndCalculate(playerResources);
+            player.setPoints(player.getScoringMethod2().getFinalPoints().orElse(0) + currentPoints);
+        }
+
+        if(actionCounter == 2){
+            onTurn = playersIDs.get(playersIDs.indexOf(playerId) + 1);
+            actionCounter = 0;
+            if(onTurn == startingPlayer){
+                calculateFinalPoints();
+                state = GameState.Finish;
+            }
+        }
+        return true;
+    }
+
+    private List<Resource> getAllResources(Player player){
+        List<Resource> playerResources = new ArrayList<>();
+        for(Card card : player.getGrid().getAllCards()){
+            playerResources.addAll(card.resourcesOnCard());
+        }
+        return playerResources;
     }
 
     private Pile getPile(Deck deck) {
@@ -188,4 +238,32 @@ class Game implements TerraFuturaInterface {
     private Player getPlayer(int platerID) {
         return players.get(playersIDs.indexOf(platerID));
     }
+
+
+    private void calculateFinalPoints(){
+        for(Player player : players){
+            player.setPoints(player.getPoints().orElse(0) + finalPoints(player));
+        }
+    }
+
+    private int finalPoints(Player player){
+        Map<Resource, Integer> pointsPerResource = new HashMap<>();
+        pointsPerResource.put(Resource.Green, 1);
+        pointsPerResource.put(Resource.Red, 1);
+        pointsPerResource.put(Resource.Yellow, 1);
+        pointsPerResource.put(Resource.Bulb,5);
+        pointsPerResource.put(Resource.Gear,5);
+        pointsPerResource.put(Resource.Car,6);
+        pointsPerResource.put(Resource.Pollution,5);
+
+        int totalPoints = 0;
+        for(Card card : player.getGrid().getAllCards()){
+            for(Resource resource : card.resourcesOnCard()){
+                totalPoints += pointsPerResource.getOrDefault(resource,0);
+            }
+        }
+        return totalPoints;
+    }
+
+
 }

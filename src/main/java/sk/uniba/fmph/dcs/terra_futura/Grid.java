@@ -132,4 +132,16 @@ public class Grid implements InterfaceActivateGrid {
         private int rightBound = 0;
         private int bottomBound = 0;
     }
+
+    public List<Card> getAllCards(){
+        List<Card> cards = new ArrayList<>();
+        for(List<Card> row : grid){
+            for(Card card : row){
+                if(card !=  null){
+                    cards.add(card);
+                }
+            }
+        }
+        return cards;
+    }
 }
