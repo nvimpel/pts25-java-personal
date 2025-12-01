@@ -147,7 +147,10 @@ public class Card {
         json.put("pollutionSpaces", pollutionSpaces);
         return json.toString();
     }
-    
+
+    /**
+     * Zisti ci karta je cist (teda ci neobsahuje viac pollution ako moze).
+     **/
     public boolean isClear() {
         return this.resources.get(Resource.Pollution) <= pollutionSpaces;
     }
