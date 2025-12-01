@@ -8,7 +8,6 @@ import java.util.Optional;
 
 
 public class MoveCardTest {
-    private MoveCard moveCard;
     private FakePile pile;
     private FakeGrid grid;
     private GridPosition gridPosition;
@@ -49,62 +48,56 @@ public class MoveCardTest {
 
     @Test
     public void moveCard_edgeIndicesValidTest() {
-        moveCard = new MoveCard();
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
-        Assert.assertTrue(moveCard.moveCard(pile,0, gridPosition, grid));
-        Assert.assertTrue(moveCard.moveCard(pile,3, gridPosition, grid));
+        Assert.assertTrue(MoveCard.moveCard(pile,0, gridPosition, grid));
+        Assert.assertTrue(MoveCard.moveCard(pile,3, gridPosition, grid));
 
     }
 
     @Test
     public void moveCard_InvalidIndexLowerBoundTest() {
-        moveCard = new MoveCard();
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
-        Assert.assertFalse(moveCard.moveCard(pile,-1, gridPosition, grid));
+        Assert.assertFalse(MoveCard.moveCard(pile,-1, gridPosition, grid));
     }
 
     @Test
     public void moveCard_InvalidIndexUpperBoundTest() {
-        moveCard = new MoveCard();
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
-        Assert.assertFalse(moveCard.moveCard(pile,4, gridPosition, grid));
+        Assert.assertFalse(MoveCard.moveCard(pile,4, gridPosition, grid));
     }
 
     @Test
     public void moveCard_CardNotPresentInPileTest() {
-        moveCard = new MoveCard();
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         pile.cardPresent = false;
         int index = 1;
-        Assert.assertFalse(moveCard.moveCard(pile, index, gridPosition, grid));
+        Assert.assertFalse(MoveCard.moveCard(pile, index, gridPosition, grid));
     }
 
     @Test
     public void moveCard_CannotPutCardOnGridTest() {
-        moveCard = new MoveCard();
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         int index = 1;
         grid.accept = false;
-        Assert.assertFalse(moveCard.moveCard(pile, index, gridPosition, grid));
+        Assert.assertFalse(MoveCard.moveCard(pile, index, gridPosition, grid));
     }
 
     @Test
     public void moveCard_SuccessTest() {
-        moveCard = new MoveCard();
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         int index = 2;
-        Assert.assertTrue(moveCard.moveCard(pile, index, gridPosition, grid));
+        Assert.assertTrue(MoveCard.moveCard(pile, index, gridPosition, grid));
     }
 }

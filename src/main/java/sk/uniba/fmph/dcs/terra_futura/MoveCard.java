@@ -7,7 +7,10 @@ import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
  * Ma jedinu metodu moveCard, ktora toto premiestnovanie sprostredkuva
  *
  **/
-public class MoveCard {
+public final class MoveCard {
+    private MoveCard() {
+        throw new UnsupportedOperationException("Utility class");
+    }
     /**
      * Metoda zistuje ci je premiestnenie validne.
      * @param pile musi obsahovat na indexe cardIndex nejaku kartu
