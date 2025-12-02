@@ -24,7 +24,7 @@ public final class ActivationPattern {
             throw new IllegalStateException("Pattern already selected");
         }
         this.grid.setActivationPattern(this.pattern);
-        this.selected = true;
+        this.selected = false; //pattern sa da aktivovat aj dva krat preto nechceme zakazat
     }
 
     public boolean isSelected() {

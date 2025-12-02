@@ -149,7 +149,7 @@ public class GameIntegrationTests {
         assertFalse(tookInvalid2);
     }
 
-    // TODO FLOW OF GAME
+
     @Test
     public void flow_of_game_is_correct() {
         Game game = newGame();
@@ -186,5 +186,39 @@ public class GameIntegrationTests {
         game.turnFinished(1);
 
         //prechod na druheho hraca
+        correctActivation = game.selectActivationPattern(2,1);
+        assertTrue(correctActivation);
+        assertEquals(GameState.ActivateCard, game.getState());
+        game.turnFinished(2);
+        correctActivation = game.selectActivationPattern(2,2);
+        assertTrue(correctActivation);
+        game.turnFinished(2);
+
+        //skoncilo sa aktivacne kolo, prechod do scorovacieho kola
+        assertEquals(GameState.SelectScoringMethod, game.getState());
+
+        boolean correctScoring = game.selectScoring(1,2);
+        assertTrue(correctScoring);
+        assertEquals(GameState.SelectScoringMethod, game.getState());
+        //pokus zleho hraca
+        boolean wrongScoring = game.selectScoring(2,2);
+        assertFalse("Tento hrac nie je na tahu",wrongScoring);
+
+        correctScoring = game.selectScoring(1,2);
+        assertTrue(correctScoring);
+        assertEquals(GameState.SelectScoringMethod, game.getState());
+
+        //skorovanie druheho hraca
+        correctScoring = game.selectScoring(2,1);
+        assertTrue(correctScoring);
+        assertEquals(GameState.SelectScoringMethod, game.getState());
+        correctScoring = game.selectScoring(2,1);
+        assertTrue(correctScoring);
+
+        //hra sa konci
+        assertEquals(GameState.Finish, game.getState());
+
+
+
     }
 }
