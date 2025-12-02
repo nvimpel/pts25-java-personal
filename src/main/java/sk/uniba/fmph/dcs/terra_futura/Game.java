@@ -8,7 +8,7 @@ import sk.uniba.fmph.dcs.terra_futura.enums.*;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
-class Game implements TerraFuturaInterface {
+public class Game implements TerraFuturaInterface {
     GameState state = GameState.TakeCardNoCardDiscarded;
     SelectReward selectReward = new SelectReward();
     int onTurn;
@@ -39,14 +39,19 @@ class Game implements TerraFuturaInterface {
     }
 
     //deterministicky konstruktor
-    public Game(int[] playersIDs, int playersCount, int startingPlayer, List<Card> customDeck) {
+    public Game(int[] playersIDs, int playersCount, int startingPlayer,
+                List<Card> customDeck1, List<Card> customDeck2, List<Player> premadePlayers) {
         this.playersIDs = Arrays.stream(playersIDs).boxed().toList();
         this.startingPlayer = startingPlayer;
-        pile1 = new Pile(customDeck);
-        pile2 = new Pile(customDeck);
+        pile1 = new Pile(customDeck1);
+        pile2 = new Pile(customDeck2);
         onTurn = startingPlayer;
         for (int i = 0; i < playersCount; i++) {
-            players.put(this.playersIDs.get(i), generatePlayer());
+            if(!premadePlayers.isEmpty()){
+                players.put(this.playersIDs.get(i), premadePlayers.removeFirst());
+            } else{
+                players.put(this.playersIDs.get(i), generatePlayer());
+            }
         }
 
     }
