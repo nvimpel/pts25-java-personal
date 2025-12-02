@@ -23,16 +23,19 @@ public class ProcessActionTest {
         this.c21 = new Card(
                 Optional.empty(),
                 Optional.of(new ArbitraryBasic(List.of(Resource.Red))),
-                1
-        );
-        this.c21.putResources(List.of(Resource.Red, Resource.Red,  Resource.Pollution));
+                1);
+        this.c21.putResources(List.of(Resource.Red, Resource.Red, Resource.Pollution));
         this.c11 = new Card(
                 Optional.of(new TransformationFixed(List.of(Resource.Red), List.of(Resource.Gear), 1)),
                 Optional.of(new TransformationFixed(List.of(Resource.Red, Resource.Red), List.of(Resource.Gear), 0)),
-                0
-        );
+                0);
 
         this.grid = new Grid() {
+            @Override
+            public boolean canBeActivated(GridPosition coordinate) {
+                return true;
+            }
+
             @Override
             public Optional<Card> getCard(GridPosition coordinate) {
                 if (coordinate.equals(new GridPosition(2, 1))) {
@@ -49,20 +52,18 @@ public class ProcessActionTest {
     @Test
     public void testActivationSuccessful() {
         boolean outcomeCard21 = ProcessAction.activateCard(
-                new GridPosition(2,1),
+                new GridPosition(2, 1),
                 grid,
                 List.of(),
                 List.of(Resource.Red),
-                List.of()
-        );
+                List.of());
 
         boolean outcomeCard11 = ProcessAction.activateCard(
-                new GridPosition(1,1),
+                new GridPosition(1, 1),
                 grid,
                 List.of(new AbstractMap.SimpleEntry<>(Resource.Red, new GridPosition(2, 1))),
                 List.of(Resource.Gear),
-                List.of(new GridPosition(2, 1))
-                );
+                List.of(new GridPosition(2, 1)));
 
         assertTrue(outcomeCard21);
         assertTrue(outcomeCard11);
@@ -77,12 +78,11 @@ public class ProcessActionTest {
     public void testActivationFailed() {
         this.c21.putResources(List.of(Resource.Pollution));
         boolean outcomeCard21 = ProcessAction.activateCard(
-                new GridPosition(2,1),
+                new GridPosition(2, 1),
                 grid,
                 List.of(),
                 List.of(Resource.Red),
-                List.of()
-        );
+                List.of());
 
         assertFalse(outcomeCard21);
         assertTrue(c21.state().contains("\"Red\":2"));
@@ -93,12 +93,11 @@ public class ProcessActionTest {
     public void testEffectIsNotValid() {
         this.c21.putResources(List.of(Resource.Pollution));
         boolean outcomeCard21 = ProcessAction.activateCard(
-                new GridPosition(2,1),
+                new GridPosition(2, 1),
                 grid,
                 List.of(),
                 List.of(Resource.Yellow),
-                List.of()
-        );
+                List.of());
 
         assertFalse(outcomeCard21);
     }

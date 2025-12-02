@@ -9,15 +9,15 @@ import java.util.Optional;
 
 final class ProcessActionUtils {
 
-    private ProcessActionUtils() {}
+    private ProcessActionUtils() {
+    }
 
     /** Kontrola platnosti efektu karty. */
     public static boolean isEffectValid(
             final Card card,
             final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs,
             final List<Resource> outputs,
-            final List<GridPosition> pollution
-    ) {
+            final List<GridPosition> pollution) {
         List<Resource> inputResources = inputs.stream().map(AbstractMap.SimpleEntry::getKey).toList();
         return card.checkUpper(inputResources, outputs, pollution.size())
                 || card.checkLower(inputResources, outputs, pollution.size());
@@ -30,8 +30,7 @@ final class ProcessActionUtils {
             final Grid grid,
             final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs,
             final List<Resource> outputs,
-            final List<GridPosition> pollution
-    ) {
+            final List<GridPosition> pollution) {
         boolean wasRemoveValid = removeResources(grid, inputs);
         if (!wasRemoveValid) {
             return false;
@@ -48,15 +47,17 @@ final class ProcessActionUtils {
             return false;
         }
 
-        grid.setActivated(cardPosition);
-        return true;
+        if (grid.canBeActivated(cardPosition)) {
+            grid.setActivated(cardPosition);
+            return true;
+        }
+        return false;
     }
 
     /** Odobranie vstupných zdrojov. */
     private static boolean removeResources(
             final Grid grid,
-            final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs
-        ) {
+            final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs) {
         for (final AbstractMap.SimpleEntry<Resource, GridPosition> entry : inputs) {
             Resource resource = entry.getKey();
             GridPosition gridPosition = entry.getValue();
@@ -69,7 +70,7 @@ final class ProcessActionUtils {
 
             if (resourceCard.canGetResources(List.of(resource))) {
                 resourceCard.getResources(List.of(resource));
-            }  else {
+            } else {
                 return false;
             }
         }
@@ -79,8 +80,7 @@ final class ProcessActionUtils {
     /** Uloženie pollution. */
     private static boolean placePollution(
             final Grid grid,
-            final List<GridPosition> pollutionPositions
-    ) {
+            final List<GridPosition> pollutionPositions) {
         for (final GridPosition position : pollutionPositions) {
             Optional<Card> pollutionCardOpt = grid.getCard(position);
             if (pollutionCardOpt.isEmpty()) {
