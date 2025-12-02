@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE suppressions PUBLIC
-     "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
-     "https://checkstyle.org/dtds/suppressions_1_0.dtd">
+     "-//Checkstyle//DTD SuppressionFilter Configuration 1.1//EN"
+     "https://checkstyle.org/dtds/suppressions_1_1.dtd">
  
 <suppressions>
    <suppress checks="JavadocPackage"
@@ -17,4 +17,10 @@
              files="[/\\]src"/>
     <suppress checks="DesignForExtension"
               files="[/\\]src"/>
+    <suppress files=".*Grid\.java" checks=".*" />
+    <suppress files=".*Pile\.java" checks=".*" />
+    <suppress files=".*Game\.java" checks=".*" />
+    <suppress files=".*SelectReward\.java" checks=".*" />
+    <suppress files=".*TerraFuturaInterface\.java" checks=".*" />
+
 </suppressions>

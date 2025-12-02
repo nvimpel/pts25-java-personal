@@ -9,11 +9,14 @@ import sk.uniba.fmph.dcs.terra_futura.Grid;
 public class Player {
     private Optional<Integer> points;
     private Grid grid;
-    private ActivationPattern activationPattern1, activationPattern2;
-    private ScoringMethod scoringMethod1, scoringMethod2;
+    private ActivationPattern activationPattern1;
+    private ActivationPattern activationPattern2;
+    private ScoringMethod scoringMethod1;
+    private ScoringMethod scoringMethod2;
 
-    public Player(Grid grid, ActivationPattern activationPattern1, ActivationPattern activationPattern2,
-            ScoringMethod scoringMethod1, ScoringMethod scoringMethod2) {
+    public Player(final Grid grid, final ActivationPattern activationPattern1,
+                  final ActivationPattern activationPattern2, final ScoringMethod scoringMethod1,
+                  final ScoringMethod scoringMethod2) {
         this.grid = grid;
         this.activationPattern1 = activationPattern1;
         this.activationPattern2 = activationPattern2;
@@ -22,7 +25,7 @@ public class Player {
         points = Optional.empty();
     }
 
-    public void setPoints(int points) {
+    public void setPoints(final int points) {
         this.points = Optional.of(points);
     }
 
