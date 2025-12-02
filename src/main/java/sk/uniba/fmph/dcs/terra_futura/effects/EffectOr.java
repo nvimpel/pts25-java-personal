@@ -24,7 +24,7 @@ public final class EffectOr implements Effect {
 
     public EffectOr(final List<Effect> effects) {
         if (effects == null) {
-            throw new NullPointerException("List effektov nemoze byt null");
+            throw new NullPointerException("List of effects cant be null");
         }
         this.effects = effects;
     }

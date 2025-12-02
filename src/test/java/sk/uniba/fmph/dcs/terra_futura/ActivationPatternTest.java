@@ -4,22 +4,22 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.junit.Before;
 import org.junit.Test;
+import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 
 import java.util.ArrayList;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
 
 class ActivateGridFake implements InterfaceActivateGrid {
-    ArrayList<SimpleEntry<Integer, Integer>> activations;
+    ArrayList<GridPosition> activations;
 
     public ActivateGridFake() {
         this.activations = new ArrayList<>();
     }
 
     @Override
-    public void setActivationPattern(Collection<SimpleEntry<Integer, Integer>> pattern) {
+    public void setActivationPattern(Collection<GridPosition> pattern) {
         activations = new ArrayList<>(pattern);
     }
 }
@@ -27,15 +27,14 @@ class ActivateGridFake implements InterfaceActivateGrid {
 public class ActivationPatternTest {
     private ActivateGridFake grid;
     private ActivationPattern activationPattern;
-    private ArrayList<SimpleEntry<Integer, Integer>> patternEntries;
 
     @Before
     public void setUp() {
         grid = new ActivateGridFake();
-        patternEntries = new ArrayList<>();
-        patternEntries.add(new SimpleEntry<Integer, Integer>(0, 0));
-        patternEntries.add(new SimpleEntry<Integer, Integer>(0, 0));
-        patternEntries.add(new SimpleEntry<Integer, Integer>(-1, 1));
+        ArrayList<GridPosition> patternEntries = new ArrayList<>();
+        patternEntries.add(new GridPosition(0, 0));
+        patternEntries.add(new GridPosition(0, 0));
+        patternEntries.add(new GridPosition(-1, 1));
         activationPattern = new ActivationPattern(grid, patternEntries);
     }
 
@@ -61,11 +60,11 @@ public class ActivationPatternTest {
         activationPattern.select();
         checkStateString("(0,0)(0,0)(-1,1)", true);
         assertEquals(3, grid.activations.size());
-        assertEquals(Integer.valueOf(0), grid.activations.get(0).getKey());
-        assertEquals(Integer.valueOf(0), grid.activations.get(0).getValue());
-        assertEquals(Integer.valueOf(0), grid.activations.get(1).getKey());
-        assertEquals(Integer.valueOf(0), grid.activations.get(1).getValue());
-        assertEquals(Integer.valueOf(-1), grid.activations.get(2).getKey());
-        assertEquals(Integer.valueOf(1), grid.activations.get(2).getValue());
+        assertEquals(0, grid.activations.get(0).x());
+        assertEquals(0, grid.activations.get(0).y());
+        assertEquals(0, grid.activations.get(1).x());
+        assertEquals(0, grid.activations.get(1).y());
+        assertEquals(-1, grid.activations.get(2).x());
+        assertEquals(1, grid.activations.get(2).y());
     }
 }

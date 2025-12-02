@@ -1,3 +1,6 @@
 target
 .Makefile.swp
 /TERRA_FUTURA.iml
+
+**/*.iml
+**/.idea/
