@@ -17,7 +17,7 @@ import static sk.uniba.fmph.dcs.terra_futura.ProcessActionUtils.isEffectValid;
  **/
 public final class ProcessActionAssistance {
 
-    private ProcessActionAssistance() {}
+    private ProcessActionAssistance() { }
 
     public static boolean activateCard(
             final Card assistingCard,

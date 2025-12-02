@@ -41,6 +41,8 @@ public class Card {
      * Zisti ci mozeme zobrat dane resources z kraty (musi ich obsahovat a zaroven
      * nemoze byt pollutnuta).
      * Ak je pollutnuta tak vieme zobrat iba pollution.
+     * @return true ak sa daju zobrat resources
+     * @param resources resources ktore chceme zobrat
      **/
     public boolean canGetResources(final List<Resource> resources) {
         Map<Resource, Integer> neededCounts = getMapWithoutResources();
@@ -48,8 +50,8 @@ public class Card {
             neededCounts.put(resource, neededCounts.get(resource) + 1);
         }
         if (!isClear()) {
-            if (resources.stream().distinct().count() == 1 && resources.contains(Resource.Pollution) &&
-                    neededCounts.get(Resource.Pollution) <= this.resources.get(Resource.Pollution)) {
+            if (resources.stream().distinct().count() == 1 && resources.contains(Resource.Pollution)
+                    && neededCounts.get(Resource.Pollution) <= this.resources.get(Resource.Pollution)) {
                 return true;
             }
             return false;
@@ -64,6 +66,7 @@ public class Card {
 
     /**
      * Odoberie dane resources z karty ak je to mozne.
+     * @param resources resources ktore odoberame
      **/
     public void getResources(final List<Resource> resources) throws IllegalArgumentException {
         if (canGetResources(resources)) {
@@ -78,6 +81,8 @@ public class Card {
     /**
      * Zisti ci mozeme pridat dane resources na kartu. (iba zisti ci nie je karta
      * nie je pollutnua).
+     * @return  vrati true ak mozme na kartu polozit resources
+     * @param resources resources ktore chceme polozit
      **/
     public boolean canPutResources(final List<Resource> resources) {
         return isClear();
@@ -85,6 +90,7 @@ public class Card {
 
     /**
      * Prida dane resources na kartu ak nie je pollutnuta.
+     * @param resources resources ktore chceme polozit na kartu
      **/
     public void putResources(final List<Resource> resources) throws IllegalArgumentException {
         if (canPutResources(resources)) {
@@ -99,6 +105,7 @@ public class Card {
     /**
      * Vrati vsetky resources na karte vratane vsetkych pollutions na tejto karte.
      * (nic nezmeni, iba vrati list).
+     * @return vrati zoznam {@code Resources} ktore su na karte
      **/
     public List<Resource> resourcesOnCard() {
         List<Resource> resources = new ArrayList<>();
@@ -113,6 +120,10 @@ public class Card {
     /**
      * Zisti ci je mozne vyrobit pouzitim horneho efektu karty z danych input
      * resources output resources.
+     * @return true ak vrchny efekt akceptuje parametre
+     * @param pollution pollution ktoru ma effekt akceptivat
+     * @param input {@code List<Resources>} ktore ma efekt vediet zobrat
+     * @param output {@code List<Resources>} ktore ma efekt vedfiet vratit
      **/
     public boolean checkUpper(final List<Resource> input, final List<Resource> output, final int pollution) {
         return upperEffect.isPresent() && upperEffect.get().check(input, output, pollution);
@@ -121,6 +132,10 @@ public class Card {
     /**
      * Zisti ci je mozne vyrobit pouzitim dolneho efektu karty z danych input
      * resources output resources.
+     * @return true ak spodny efekt akceptuje parametre
+     * @param pollution pollution ktoru ma effekt akceptivat
+     * @param input {@code List<Resources>} ktore ma efekt vediet zobrat
+     * @param output {@code List<Resources>} ktore ma efekt vedfiet vratit
      **/
     public boolean checkLower(final List<Resource> input, final List<Resource> output, final int pollution) {
         return lowerEffect.isPresent() && lowerEffect.get().check(input, output, pollution);
@@ -128,6 +143,7 @@ public class Card {
 
     /**
      * Zisti ci spodny alebo dolny efekt karty obsahuje asistenciu.
+     * @return true ak jeden z efektov ma asisetenciu
      **/
     public boolean hasAssistance() {
         if (lowerEffect.isPresent() && lowerEffect.get().hasAssistance()) {
@@ -150,7 +166,7 @@ public class Card {
         return json.toString();
     }
 
-    private static void putOptionalEffectToJSON(JSONObject json, String key, Optional<Effect> effect) {
+    private static void putOptionalEffectToJSON(final JSONObject json, final String key, final Optional<Effect> effect) {
         if (effect.isPresent()) {
             json.put(key, Optional.of(effect.get().state()));
         } else {
@@ -160,6 +176,7 @@ public class Card {
 
     /**
      * Zisti ci karta je cist (teda ci neobsahuje viac pollution ako moze).
+     * @return true ak nie je blok pollution
      **/
     public boolean isClear() {
         return this.resources.get(Resource.Pollution) <= pollutionSpaces;

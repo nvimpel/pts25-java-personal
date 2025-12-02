@@ -17,9 +17,9 @@ import static sk.uniba.fmph.dcs.terra_futura.ProcessActionUtils.isEffectValid;
  */
 public final class ProcessAction {
 
-    private ProcessAction() {}
+    private ProcessAction() { }
 
-    public static boolean activateCard (
+    public static boolean activateCard(
             final GridPosition cardPosition,
             final Grid grid,
             final List<SimpleEntry<Resource, GridPosition>> inputs,

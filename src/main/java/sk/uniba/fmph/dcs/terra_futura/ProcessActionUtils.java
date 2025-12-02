@@ -12,7 +12,13 @@ final class ProcessActionUtils {
     private ProcessActionUtils() {
     }
 
-    /** Kontrola platnosti efektu karty. */
+    /** Kontrola platnosti efektu karty.
+     * @param card      karta, ktorej efekt sa kontroluje
+     * @param inputs    zoznam vstupov ako párov resource + pozícia
+     * @param outputs   zoznam výstupných resources
+     * @param pollution zoznam pozícií znečistenia
+     * @return true ak daný efekt existuje, false inak
+     **/
     public static boolean isEffectValid(
             final Card card,
             final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs,
@@ -23,7 +29,15 @@ final class ProcessActionUtils {
                 || card.checkLower(inputResources, outputs, pollution.size());
     }
 
-    /** Spracovanie akcie karty. */
+    /** Spracovanie akcie karty.
+     * @return true ak sa uspesne spracovala karta
+     * @param card karta ktoru spracuvame
+     * @param cardPosition pozicia danej karty
+     * @param grid grid daneho hraca.
+     * @param inputs vstupne {@code Resources}
+     * @param outputs vystupne {@code Resources}
+     * @param pollution kolko pollution sa ma generovat
+     **/
     public static boolean processCardAction(
             final Card card,
             final GridPosition cardPosition,
@@ -54,7 +68,11 @@ final class ProcessActionUtils {
         return false;
     }
 
-    /** Odobranie vstupných zdrojov. */
+    /** Odobranie vstupných zdrojov.
+     * @return true ak odoberie resources
+     * @param inputs {@code Resources} na odobratie
+     * @param grid hracov grid
+     **/
     private static boolean removeResources(
             final Grid grid,
             final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs) {
@@ -77,7 +95,11 @@ final class ProcessActionUtils {
         return true;
     }
 
-    /** Uloženie pollution. */
+    /** Uloženie pollution.
+     * @return true ak sa podarilo place pollution
+     * @param grid hracov gird
+     * @param pollutionPositions zoznam poluution a ciel destinacii
+     **/
     private static boolean placePollution(
             final Grid grid,
             final List<GridPosition> pollutionPositions) {

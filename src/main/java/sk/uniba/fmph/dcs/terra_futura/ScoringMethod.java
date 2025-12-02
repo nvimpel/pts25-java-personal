@@ -15,7 +15,7 @@ public class ScoringMethod {
      * @param requiredCombination - required combination of resources for which you get points
      * @param pointsPerCombination - how many points do you get per combination
      */
-    public ScoringMethod(List<Resource> requiredCombination, int pointsPerCombination) {
+    public ScoringMethod(final List<Resource> requiredCombination, final int pointsPerCombination) {
         if (requiredCombination == null || requiredCombination.isEmpty()) {
             throw new IllegalArgumentException("Required combination cannot be null or empty.");
         }
@@ -33,11 +33,11 @@ public class ScoringMethod {
     }
 
     /**
-     * calculate how many points you get from all the resources at the end
+     * calculate how many points you get from all the resources at the end.
      *
      * @param playerResources - total resources at the end
      */
-    public void selectThisMethodAndCalculate(List<Resource> playerResources) {
+    public void selectThisMethodAndCalculate(final List<Resource> playerResources) {
         if (playerResources == null || playerResources.isEmpty()) {
             this.calculatedTotal = Optional.of(0);
             return;
