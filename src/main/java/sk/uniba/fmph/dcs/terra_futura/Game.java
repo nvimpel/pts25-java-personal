@@ -45,7 +45,7 @@ public final class Game implements TerraFuturaInterface {
     private int actionCounter = 0;
 
     public Game(final int[] playersIDs, final int playersCount, final int startingPlayer) {
-        if (playersCount < MAXIMUM_NUM_OF_PLAYERS || playersCount > MAXIMUM_NUM_OF_PLAYERS) {
+        if (playersCount < MINIMUM_NUM_OF_PLAYERS || playersCount > MAXIMUM_NUM_OF_PLAYERS) {
             throw new IllegalArgumentException("Invalid number of players: " + playersCount);
         }
         this.playersIDs = Arrays.stream(playersIDs).boxed().toList();
@@ -146,6 +146,9 @@ public final class Game implements TerraFuturaInterface {
                     cardPosition, players.get(playerId).getGrid(),
                     otherPlayerId.get(), inputs, outputs, pollution);
             if (result) {
+
+                selectReward.setReward(assistingPlayer,assistingCard.get(),
+                        inputs.stream().map(SimpleEntry::getKey).toList());
                 state = GameState.SelectReward;
             }
         } else {
@@ -322,6 +325,15 @@ public final class Game implements TerraFuturaInterface {
 
     public GameState getState() {
         return state;
+    }
+
+    public String getPoints() {
+        StringBuilder sb = new StringBuilder();
+        for(Player player : players.values()) {
+            sb.append(player.getPoints().orElse(0));
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
 

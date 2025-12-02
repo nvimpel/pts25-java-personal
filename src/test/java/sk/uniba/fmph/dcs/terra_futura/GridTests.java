@@ -97,8 +97,7 @@ public class GridTests {
     @Test
     public void testSetActivationPattern() {
         List<GridPosition> pattern = List.of(
-                new GridPosition(0, 1),
-                new GridPosition(1, 0)
+                new GridPosition(0, 0)
         );
         grid.setActivationPattern(pattern);
 

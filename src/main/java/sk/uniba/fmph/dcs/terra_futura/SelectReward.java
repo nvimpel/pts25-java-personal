@@ -8,15 +8,23 @@ import java.util.Optional;
 public class SelectReward {
     private Optional<Integer> player;
     private List<Resource> selection;
+    private Card card;
 
-    public void setReward(int player, Card card, List<Resource> resources) {
+    public void setReward(final int player, final Card card, final List<Resource> resources) {
+        this.player = Optional.of(player);
+        this.card = card;
+        this.selection = List.copyOf(resources);
     }
 
     public boolean canSelectReward(Resource resource) {
-        return false;
+        return selection.contains(resource);
     }
 
     public void selectReward(Resource resource) {
+        if (!canSelectReward(resource)) {
+            return;
+        }
+        card.putResources(List.of(resource));
     }
 
     public String state() {

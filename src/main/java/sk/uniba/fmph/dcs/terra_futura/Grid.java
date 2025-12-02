@@ -1,18 +1,23 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 import sk.uniba.fmph.dcs.terra_futura.effects.ArbitraryBasic;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 
 public class Grid implements InterfaceActivateGrid {
     private final ArrayList<ArrayList<Card>> grid = new ArrayList<>();
     private static final int MAXIMAL_GRID_LENGTH = 5;
     private static final int GRID_OFFSET = 2;
-    private final Set<GridPosition> activable = new HashSet<>();
+    private final List<GridPosition> activable = new ArrayList<>();
     private final Bounds bounds = new Bounds();
 
     public Grid() {
@@ -29,11 +34,13 @@ public class Grid implements InterfaceActivateGrid {
 
 
     public Optional<Card> getCard(final GridPosition coordinate) {
-        if (grid.get(coordinate.x() + GRID_OFFSET).get(coordinate.y() + GRID_OFFSET) == null) {
+        int gx = coordinate.x() + GRID_OFFSET;
+        int gy = coordinate.y() + GRID_OFFSET;
+        if (gx < 0 || gx >= MAXIMAL_GRID_LENGTH || gy < 0 || gy >= MAXIMAL_GRID_LENGTH) {
             return Optional.empty();
-        } else {
-            return Optional.of(grid.get(coordinate.x() + 2).get(coordinate.y() + 2));
         }
+        Card c = grid.get(gx).get(gy);
+        return Optional.ofNullable(c);
     }
 
     public boolean canPutCard(final GridPosition coordinate) {
@@ -70,13 +77,19 @@ public class Grid implements InterfaceActivateGrid {
 
     private void setActivableNeighbours(final GridPosition coordinate) {
         for (int i = bounds.bottomBound; i <= bounds.topBound; i++) {
-            if (getCard(coordinate).isPresent()) {
-                activable.add(new GridPosition(i, coordinate.y()));
+            GridPosition position = new GridPosition(i, coordinate.y());
+            if (getCard(position).isPresent()) {
+                if(!activable.contains(position)) {
+                    activable.add(position);
+                }
             }
         }
         for (int i = bounds.leftBound; i <= bounds.rightBound; i++) {
-            if (getCard(coordinate).isPresent()) {
-                activable.add(new GridPosition(coordinate.x(), i));
+            GridPosition position = new GridPosition(coordinate.x(), i);
+            if (getCard(position).isPresent()) {
+                if(!activable.contains(position)) {
+                    activable.add(position);
+                }
             }
         }
     }
@@ -96,7 +109,7 @@ public class Grid implements InterfaceActivateGrid {
         if (bounds.topBound == 2) normalization_X = -1;
         if (bounds.topBound == 0) normalization_X = 1;
         if (bounds.leftBound == -2) normalization_Y = -1;
-        if (bounds.leftBound == 0) normalization_X = 1;
+        if (bounds.leftBound == 0) normalization_Y = 1;
 
         for (GridPosition coordinate : pattern) {
             activable.add(new GridPosition(coordinate.x()+normalization_X,
@@ -108,9 +121,7 @@ public class Grid implements InterfaceActivateGrid {
         activable.clear();
     }
 
-    public String state() {
-        return "";
-    }
+
 
     private void updateBounds(final GridPosition coordinate) {
         if (coordinate.x() < bounds.bottomBound) {
@@ -152,4 +163,42 @@ public class Grid implements InterfaceActivateGrid {
         }
         return cards;
     }
+
+    public String state() {
+        JSONObject json = new JSONObject();
+
+        JSONObject b = new JSONObject();
+        b.put("left", bounds.leftBound);
+        b.put("right", bounds.rightBound);
+        b.put("top", bounds.topBound);
+        b.put("bottom", bounds.bottomBound);
+        json.put("bounds", b);
+
+        JSONArray activableArr = new JSONArray();
+        for (GridPosition pos : activable) {
+            JSONObject p = new JSONObject();
+            p.put("x", pos.x());
+            p.put("y", pos.y());
+            activableArr.put(p);
+        }
+        json.put("activable", activableArr);
+
+        JSONArray cardsArr = new JSONArray();
+        for (int x = 0; x < MAXIMAL_GRID_LENGTH; x++) {
+            for (int y = 0; y < MAXIMAL_GRID_LENGTH; y++) {
+                Card card = grid.get(x).get(y);
+                if (card != null) {
+                    JSONObject entry = new JSONObject();
+                    entry.put("x", x - GRID_OFFSET);
+                    entry.put("y", y - GRID_OFFSET);
+                    entry.put("card", new JSONObject(card.state()));
+                    cardsArr.put(entry);
+                }
+            }
+        }
+        json.put("cards", cardsArr);
+
+        return json.toString();
+    }
+
 }

@@ -7,9 +7,12 @@ import sk.uniba.fmph.dcs.terra_futura.datatypes.GridPosition;
 import sk.uniba.fmph.dcs.terra_futura.datatypes.Player;
 import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 import sk.uniba.fmph.dcs.terra_futura.enums.GameState;
+import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -154,13 +157,16 @@ public class GameIntegrationTests {
     public void flow_of_game_is_correct() {
         Game game = newGame();
 
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 0; j <= 2; j++) {
                 if(i==0 && j==0){
                     continue;
                 }
                 for (int p = 1; p <= 2; p++) {
                     game.takeCard(p, new CardSource(Deck.I, 2), new GridPosition(i, j));
+                    game.activateCard(p,new GridPosition(0,0),
+                            new ArrayList<>(),List.of(Resource.Yellow),
+                            new ArrayList<>(), Optional.empty(), Optional.empty());
                     game.turnFinished(p);
                 }
             }
@@ -215,8 +221,12 @@ public class GameIntegrationTests {
         correctScoring = game.selectScoring(2,1);
         assertTrue(correctScoring);
 
+
+
         //hra sa konci
         assertEquals(GameState.Finish, game.getState());
+
+        System.out.println(game.getPoints());
 
 
 

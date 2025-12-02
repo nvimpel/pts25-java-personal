@@ -58,8 +58,11 @@ public class Pile {
         return Optional.of(visible.get(index));
     }
 
-    
+
     public Card takeCard(final int index) {
+        if (index == 0 && !pile.isEmpty()) {
+            return pile.removeFirst();
+        }
         if (getCard(index).isEmpty()) {
             throw new NoSuchElementException();
         }
