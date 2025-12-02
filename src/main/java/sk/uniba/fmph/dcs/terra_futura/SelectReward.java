@@ -1,5 +1,7 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 
 import java.util.List;
@@ -28,6 +30,17 @@ public class SelectReward {
     }
 
     public String state() {
-        return "";
+        JSONObject json = new JSONObject();
+
+        json.put("assistingPlayer", player);
+        json.put("assistingCard", card);
+
+        JSONArray selectionArr = new JSONArray();
+        for (Resource resource : selection) {
+            selectionArr.put(resource.name());
+        }
+
+        json.put("selection", selectionArr);
+        return json.toString();
     }
 }

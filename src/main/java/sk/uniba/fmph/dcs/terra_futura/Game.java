@@ -69,9 +69,10 @@ public final class Game implements TerraFuturaInterface {
         pile2 = new Pile(customDeck2);
         onTurn = startingPlayer;
         this.turnNumber = currentRound;
+        List<Player> premadePlayersCopy = new  ArrayList<>(premadePlayers);
         for (int i = 0; i < playersCount; i++) {
-            if (!premadePlayers.isEmpty()) {
-                players.put(this.playersIDs.get(i), premadePlayers.removeFirst());
+            if (!premadePlayersCopy.isEmpty()) {
+                players.put(this.playersIDs.get(i), premadePlayersCopy.removeFirst());
             } else {
                 players.put(this.playersIDs.get(i), generatePlayer());
             }
@@ -144,7 +145,7 @@ public final class Game implements TerraFuturaInterface {
             assistingPlayer = otherPlayerId.get();
             result = ProcessActionAssistance.activateCard(assistingCard.get(),
                     cardPosition, players.get(playerId).getGrid(),
-                    otherPlayerId.get(), inputs, outputs, pollution);
+                    inputs, outputs, pollution);
             if (result) {
 
                 selectReward.setReward(assistingPlayer,assistingCard.get(),

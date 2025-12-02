@@ -9,7 +9,6 @@ import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 import sk.uniba.fmph.dcs.terra_futura.enums.GameState;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -152,6 +151,28 @@ public class GameIntegrationTests {
         assertFalse(tookInvalid2);
     }
 
+    @Test
+    public void cant_activate_same_card_twice() {
+        Game game = newGame();
+
+        //da kartu
+        boolean tookCardValid = game.takeCard(1, new CardSource(Deck.I,  1), new GridPosition(1, 0));
+        assertTrue(tookCardValid);
+        //aktivuje stredovu
+        boolean activatedOnce = game.activateCard(1,new GridPosition(0,0),
+                new ArrayList<>(),List.of(Resource.Yellow),
+                new ArrayList<>(), Optional.empty(), Optional.empty());
+        assertTrue(activatedOnce);
+
+        boolean activateTwice = game.activateCard(1,new GridPosition(0,0),
+                new ArrayList<>(),List.of(Resource.Yellow),
+                new ArrayList<>(), Optional.empty(), Optional.empty());
+        assertFalse(activateTwice);
+
+
+
+    }
+
 
     @Test
     public void flow_of_game_is_correct() {
@@ -225,9 +246,6 @@ public class GameIntegrationTests {
 
         //hra sa konci
         assertEquals(GameState.Finish, game.getState());
-
-        System.out.println(game.getPoints());
-
 
 
     }

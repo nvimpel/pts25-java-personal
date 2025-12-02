@@ -69,8 +69,8 @@ final class CardGenerator {
     public static ActivationPattern generateActivationPattern(final Grid grid) {
         Collection<GridPosition> pattern = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < 4; i++) {
-            pattern.add(new GridPosition(random.nextInt() % 5, random.nextInt()));
+        for (int i = 0; i < 5; i++) {
+            pattern.add(new GridPosition(random.nextInt() % 3 -1, random.nextInt() % 3 -1));
         }
         return new ActivationPattern(grid, pattern);
     }

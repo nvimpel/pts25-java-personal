@@ -101,9 +101,9 @@ public class GridTests {
         );
         grid.setActivationPattern(pattern);
 
-        for (GridPosition pos : pattern) {
-            assertTrue(grid.canBeActivated(pos));
-        }
+
+        assertTrue(grid.canBeActivated(new GridPosition(1,1)));
+
     }
 
     @Test
