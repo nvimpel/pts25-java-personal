@@ -4,7 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 import static sk.uniba.fmph.dcs.terra_futura.CardGenerator.pileGenerator;
@@ -28,7 +32,7 @@ public class Pile {
         Collections.shuffle(pile);
 
         for  (int i = 1; i <= NUMBER_OF_VISIBLE_CARDS; i++) {
-            if(pile.isEmpty()) {
+            if (pile.isEmpty()) {
                 break;
             }
             visible.addFirst(pile.removeFirst());
@@ -40,19 +44,21 @@ public class Pile {
         this.pile = new ArrayList<>(pile);
 
         for  (int i = 1; i <= NUMBER_OF_VISIBLE_CARDS; i++) {
-            if(this.pile.isEmpty()){
+            if (this.pile.isEmpty()) {
                 break;
             }
             visible.addFirst(this.pile.removeFirst());
         }
     }
+
     public Optional<Card> getCard(final int index) {
-        if(index < 0 || index >= visible.size()) {
+        if (index < 0 || index >= visible.size()) {
             return Optional.empty();
         }
         return Optional.of(visible.get(index));
     }
 
+    
     public Card takeCard(final int index) {
         if (getCard(index).isEmpty()) {
             throw new NoSuchElementException();
@@ -100,7 +106,11 @@ public class Pile {
         json.put("visible_cards", visibleArr);
         return json.toString(2);
     }
-    public int stateVisibleCount() { return visible.size(); }
-    public int statePileSize() { return pile.size(); }
+    public int stateVisibleCount() {
+        return visible.size();
+    }
+    public int statePileSize() {
+        return pile.size();
+    }
 
 }
