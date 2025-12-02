@@ -31,7 +31,7 @@ public final class MoveCard {
             throw new NullPointerException("Grid is null");
         }
         final int numberOfCards = 4;
-        if (cardIndex < 0 || cardIndex >= numberOfCards) {
+        if (cardIndex < 0 || cardIndex > numberOfCards) {
             return false;
         }
         if (pile.getCard(cardIndex).isEmpty()) {

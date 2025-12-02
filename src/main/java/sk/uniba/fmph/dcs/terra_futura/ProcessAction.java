@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.AbstractMap.SimpleEntry;
 
-import static sk.uniba.fmph.dcs.terra_futura.ProcessActionUtils.*;
+import static sk.uniba.fmph.dcs.terra_futura.ProcessActionUtils.processCardAction;
+import static sk.uniba.fmph.dcs.terra_futura.ProcessActionUtils.isEffectValid;
 
 /**
  * Overí, či sa daná akcia (aktivácia karty) dá vykonať
@@ -15,6 +16,8 @@ import static sk.uniba.fmph.dcs.terra_futura.ProcessActionUtils.*;
  * Bez podpory Assistance.
  */
 public final class ProcessAction {
+
+    private ProcessAction() {}
 
     public static boolean activateCard (
             final GridPosition cardPosition,
@@ -34,32 +37,11 @@ public final class ProcessAction {
             return false;
         }
 
-        List<Resource> inputResources = inputs.stream().map(SimpleEntry::getKey).toList();
-        boolean isEffectValid =
-                card.checkUpper(inputResources, outputs, pollution.size())
-                || card.checkLower(inputResources, outputs, pollution.size());
-        if (!isEffectValid) {
+        boolean isEffectOk = isEffectValid(card, inputs, outputs, pollution);
+        if (!isEffectOk) {
             return false;
         }
 
-        boolean wasRemoveValid = removeResources(grid, inputs);
-        if (!wasRemoveValid) {
-            return false;
-        }
-
-        try {
-            card.putResources(outputs);
-        } catch (RuntimeException e) {
-            return false;
-        }
-
-        boolean wasPollutionValid = placePollution(grid, pollution);
-        if (!wasPollutionValid) {
-            return false;
-        }
-
-        grid.setActivated(cardPosition);
-
-        return true;
+        return processCardAction(card, cardPosition, grid, inputs, outputs, pollution);
     }
 }
