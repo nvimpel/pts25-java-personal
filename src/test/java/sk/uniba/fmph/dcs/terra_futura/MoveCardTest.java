@@ -88,7 +88,7 @@ public class MoveCardTest {
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
         Assert.assertTrue(MoveCard.moveCard(pile,0, gridPosition, grid));
-        Assert.assertTrue(MoveCard.moveCard(pile,3, gridPosition, grid));
+        Assert.assertTrue(MoveCard.moveCard(pile,4, gridPosition, grid));
 
     }
 
@@ -105,7 +105,7 @@ public class MoveCardTest {
         pile = new FakePile();
         grid = new FakeGrid();
         gridPosition = new GridPosition(0,0);
-        Assert.assertFalse(MoveCard.moveCard(pile,4, gridPosition, grid));
+        Assert.assertFalse(MoveCard.moveCard(pile,5, gridPosition, grid));
     }
 
     @Test
