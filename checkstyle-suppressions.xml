@@ -15,4 +15,6 @@
              files="[/\\]src"/>
    <suppress checks="LineLength"
              files="[/\\]src"/>
+    <suppress checks="DesignForExtension"
+              files="[/\\]src"/>
 </suppressions>
