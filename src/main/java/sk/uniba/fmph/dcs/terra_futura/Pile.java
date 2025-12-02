@@ -1,5 +1,7 @@
 package sk.uniba.fmph.dcs.terra_futura;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
-import static sk.uniba.fmph.dcs.terra_futura.PileGenerator.pileGenerator;
+import static sk.uniba.fmph.dcs.terra_futura.CardGenerator.pileGenerator;
 
 
 
@@ -27,21 +29,40 @@ public class Pile {
         } else {
             pile = pileGenerator(Deck.II);
         }
+        Collections.shuffle(pile);
 
         for  (int i = 1; i <= NUMBER_OF_VISIBLE_CARDS; i++) {
+            if (pile.isEmpty()) {
+                break;
+            }
             visible.addFirst(pile.removeFirst());
         }
     }
 
-    public Optional<Card> getCard(final int index) {
-        Card card = visible.get(index);
-        if (card == null) {
-            return Optional.empty();
+    //deterministicky konstruktor
+    public Pile(final List<Card> pile) {
+        this.pile = new ArrayList<>(pile);
+
+        for  (int i = 1; i <= NUMBER_OF_VISIBLE_CARDS; i++) {
+            if (this.pile.isEmpty()) {
+                break;
+            }
+            visible.addFirst(this.pile.removeFirst());
         }
-        return Optional.of(card);
     }
 
+    public Optional<Card> getCard(final int index) {
+        if (index < 0 || index >= visible.size()) {
+            return Optional.empty();
+        }
+        return Optional.of(visible.get(index));
+    }
+
+
     public Card takeCard(final int index) {
+        if (index == 0 && !pile.isEmpty()) {
+            return pile.removeFirst();
+        }
         if (getCard(index).isEmpty()) {
             throw new NoSuchElementException();
         }
@@ -52,20 +73,47 @@ public class Pile {
     }
 
     private void addCard() {
-        visible.addFirst(pile.removeFirst());
+
         if (pile.isEmpty()) {
             Collections.shuffle(discardPile);
             pile.addAll(discardPile);
             discardPile.clear();
         }
+        if (pile.isEmpty()) {
+            return;
+        }
+        visible.addFirst(pile.removeFirst());
     }
 
     public final void removeLastCard() {
+        if (visible.isEmpty()) {
+            return;
+        }
         discardPile.add(visible.removeLast());
         addCard();
     }
 
-    final String state() {
-        return "";
+    public String state() {
+        JSONObject json = new JSONObject();
+
+
+        json.put("pile_size", pile.size());
+        json.put("discard_size", discardPile.size());
+
+
+        JSONArray visibleArr = new JSONArray();
+        for (Card card : visible) {
+            visibleArr.put(new JSONObject(card.state()));
+        }
+
+        json.put("visible_cards", visibleArr);
+        return json.toString(2);
     }
+    public int stateVisibleCount() {
+        return visible.size();
+    }
+    public int statePileSize() {
+        return pile.size();
+    }
+
 }

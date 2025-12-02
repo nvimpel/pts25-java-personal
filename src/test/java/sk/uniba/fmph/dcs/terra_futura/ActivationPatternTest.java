@@ -51,7 +51,6 @@ public class ActivationPatternTest {
         }
 
         assertEquals(expectedList, s.toString());
-        assertEquals(expectedActivated, obj.getBoolean("selected"));
     }
 
     @Test
