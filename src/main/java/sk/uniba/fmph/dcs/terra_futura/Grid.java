@@ -91,8 +91,16 @@ public class Grid implements InterfaceActivateGrid {
 
     @Override
     public void setActivationPattern(final Collection<GridPosition> pattern) {
+        int normalization_X = 0;
+        int normalization_Y = 0;
+        if (bounds.topBound == 2) normalization_X = -1;
+        if (bounds.topBound == 0) normalization_X = 1;
+        if (bounds.leftBound == -2) normalization_Y = -1;
+        if (bounds.leftBound == 0) normalization_X = 1;
+
         for (GridPosition coordinate : pattern) {
-            activable.add(new GridPosition(coordinate.x(), coordinate.y()));
+            activable.add(new GridPosition(coordinate.x()+normalization_X,
+                    coordinate.y()+normalization_Y));
         }
     }
 

@@ -27,6 +27,9 @@ public class Game implements TerraFuturaInterface {
     int actionCounter = 0;
 
     public Game(int[] playersIDs, int playersCount, int startingPlayer) {
+        if (playersCount < 2 || playersCount > 5){
+            throw new IllegalArgumentException("Invalid number of players: " + playersCount);
+        }
         this.playersIDs = Arrays.stream(playersIDs).boxed().toList();
         pile1 =  new Pile(Deck.I);
         pile2 =  new Pile(Deck.II);
@@ -40,12 +43,14 @@ public class Game implements TerraFuturaInterface {
 
     //deterministicky konstruktor
     public Game(int[] playersIDs, int playersCount, int startingPlayer,
-                List<Card> customDeck1, List<Card> customDeck2, List<Player> premadePlayers) {
+                List<Card> customDeck1, List<Card> customDeck2, List<Player> premadePlayers,
+                int currentRound) {
         this.playersIDs = Arrays.stream(playersIDs).boxed().toList();
         this.startingPlayer = startingPlayer;
         pile1 = new Pile(customDeck1);
         pile2 = new Pile(customDeck2);
         onTurn = startingPlayer;
+        this.turnNumber = currentRound;
         for (int i = 0; i < playersCount; i++) {
             if(!premadePlayers.isEmpty()){
                 players.put(this.playersIDs.get(i), premadePlayers.removeFirst());

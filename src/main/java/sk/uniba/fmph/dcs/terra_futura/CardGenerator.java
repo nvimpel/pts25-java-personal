@@ -6,10 +6,7 @@ import sk.uniba.fmph.dcs.terra_futura.enums.Deck;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Generator of piles defined like this.
@@ -56,12 +53,15 @@ final class CardGenerator {
     }
 
     public static ScoringMethod generateScoringCard(){
-        List<Resource> requiredCombination =  new ArrayList<>();
-        return new ScoringMethod(requiredCombination,0);
+        return pickRandomScoring();
     }
 
     public static ActivationPattern generateActivationPattern(Grid grid) {
         Collection<GridPosition> pattern = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 4; i++) {
+            pattern.add(new GridPosition(random.nextInt() % 5, random.nextInt()));
+        }
         return new ActivationPattern(grid,pattern);
     }
 
@@ -241,5 +241,45 @@ final class CardGenerator {
         }
         return cards;
     }
+
+    private static ScoringMethod pickRandomScoring(){
+        ArrayList<ScoringMethod> randomScores = new ArrayList<>();
+        randomScores.add(concreteScore(2, Resource.Bulb,1,Resource.Gear,1));
+        randomScores.add(concreteScore(3, Resource.Bulb,1,Resource.Red,1,
+                Resource.Gear,1));
+        randomScores.add(concreteScore(3, Resource.Bulb,1,Resource.Green,1,
+                Resource.Gear,1));
+
+        randomScores.add(concreteScore(4,Resource.Car,2, Resource.Money,1));
+        randomScores.add(concreteScore(4,Resource.Bulb,2, Resource.Gear,1));
+        randomScores.add(concreteScore(4,Resource.Bulb,1, Resource.Gear,2));
+
+        randomScores.add(concreteScore(4,Resource.Car,1, Resource.Gear,1,
+                Resource.Yellow,1));
+        randomScores.add(concreteScore(4,Resource.Car,1, Resource.Bulb,1,
+                Resource.Yellow,1));
+
+        randomScores.add(concreteScore(5,Resource.Car,1,Resource.Bulb,1));
+        randomScores.add(concreteScore(5, Resource.Gear,2,Resource.Car,1));
+
+        randomScores.add(concreteScore(6, Resource.Gear,2,Resource.Bulb,2));
+
+        randomScores.add(concreteScore(7, Resource.Bulb,3,Resource.Car,1));
+        randomScores.add(concreteScore(7, Resource.Gear,3,Resource.Red,1));
+        Random random = new Random();
+        return randomScores.get(random.nextInt(randomScores.size()));
+    }
+
+    private static ScoringMethod concreteScore(int points,Object... args){
+        List<Resource> required = new ArrayList<>();
+        for (int i = 0; i < args.length; i+=2) {
+            Resource resource = (Resource) args[i];
+            Integer count = (Integer) args[i+1];
+            required.addAll(Collections.nCopies(count, resource));
+        }
+        return new ScoringMethod(required, points);
+    }
+
+
 
 }
