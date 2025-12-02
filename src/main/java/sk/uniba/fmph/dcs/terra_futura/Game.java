@@ -18,8 +18,8 @@ class Game implements TerraFuturaInterface {
 
     int assistingPlayer;
 
-    Pile pile1 = new Pile(Deck.I);
-    Pile pile2 = new Pile(Deck.II);
+    Pile pile1;
+    Pile pile2;
 
     int startingPlayer;
     int turnNumber = 1;
@@ -28,7 +28,22 @@ class Game implements TerraFuturaInterface {
 
     public Game(int[] playersIDs, int playersCount, int startingPlayer) {
         this.playersIDs = Arrays.stream(playersIDs).boxed().toList();
+        pile1 =  new Pile(Deck.I);
+        pile2 =  new Pile(Deck.II);
         this.startingPlayer = startingPlayer;
+        onTurn = startingPlayer;
+        for (int i = 0; i < playersCount; i++) {
+            players.put(this.playersIDs.get(i), generatePlayer());
+        }
+
+    }
+
+    //deterministicky konstruktor
+    public Game(int[] playersIDs, int playersCount, int startingPlayer, List<Card> customDeck) {
+        this.playersIDs = Arrays.stream(playersIDs).boxed().toList();
+        this.startingPlayer = startingPlayer;
+        pile1 = new Pile(customDeck);
+        pile2 = new Pile(customDeck);
         onTurn = startingPlayer;
         for (int i = 0; i < playersCount; i++) {
             players.put(this.playersIDs.get(i), generatePlayer());
@@ -270,6 +285,14 @@ class Game implements TerraFuturaInterface {
         }
         return totalPoints;
     }
+
+    //info-getters
+
+    public GameState getState() {
+        return state;
+    }
+
+
 
 
 }

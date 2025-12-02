@@ -16,7 +16,6 @@ public class Pile {
     private final List<Card> visible = new ArrayList<>();
     private final List<Card> discardPile = new ArrayList<>();
 
-    private final Random rand = new Random();
 
     private static final int NUMBER_OF_VISIBLE_CARDS = 4;
 
@@ -26,19 +25,32 @@ public class Pile {
         } else {
             pile = pileGenerator(Deck.II);
         }
-        Collections.shuffle(pile,rand);
+        Collections.shuffle(pile);
 
         for  (int i = 1; i <= NUMBER_OF_VISIBLE_CARDS; i++) {
+            if(pile.isEmpty()) {
+                break;
+            }
             visible.addFirst(pile.removeFirst());
         }
     }
 
+    //deterministicky konstruktor
+    public Pile(final List<Card> pile) {
+        this.pile = new ArrayList<>(pile);
+
+        for  (int i = 1; i <= NUMBER_OF_VISIBLE_CARDS; i++) {
+            if(this.pile.isEmpty()){
+                break;
+            }
+            visible.addFirst(this.pile.removeFirst());
+        }
+    }
     public Optional<Card> getCard(final int index) {
-        Card card = visible.get(index);
-        if (card == null) {
+        if(index < 0 || index >= visible.size()) {
             return Optional.empty();
         }
-        return Optional.of(card);
+        return Optional.of(visible.get(index));
     }
 
     public Card takeCard(final int index) {
@@ -52,15 +64,22 @@ public class Pile {
     }
 
     private void addCard() {
-        visible.addFirst(pile.removeFirst());
+
         if (pile.isEmpty()) {
             Collections.shuffle(discardPile);
             pile.addAll(discardPile);
             discardPile.clear();
         }
+        if (pile.isEmpty()) {
+            return;
+        }
+        visible.addFirst(pile.removeFirst());
     }
 
     public final void removeLastCard() {
+        if (visible.isEmpty()) {
+            return;
+        }
         discardPile.add(visible.removeLast());
         addCard();
     }

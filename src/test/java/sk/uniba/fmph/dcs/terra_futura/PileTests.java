@@ -27,10 +27,7 @@ public class PileTests {
     @Test
     public void testGetCard() {
         assertTrue(pile.getCard(0).isPresent());
-        try {
-            pile.getCard(10);
-            fail("Expected IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException ignored) {}
+        assertTrue(pile.getCard(10).isEmpty());
     }
 
     @Test
