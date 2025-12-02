@@ -12,11 +12,11 @@ public class Player {
     private ActivationPattern activationPattern1, activationPattern2;
     private ScoringMethod scoringMethod1, scoringMethod2;
 
-    public Player(Grid grid, ActivationPattern activationPattern1, ActivationPattern activationPatter2,
+    public Player(Grid grid, ActivationPattern activationPattern1, ActivationPattern activationPattern2,
             ScoringMethod scoringMethod1, ScoringMethod scoringMethod2) {
         this.grid = grid;
         this.activationPattern1 = activationPattern1;
-        this.activationPattern2 = activationPattern1;
+        this.activationPattern2 = activationPattern2;
         this.scoringMethod1 = scoringMethod1;
         this.scoringMethod2 = scoringMethod2;
         points = Optional.empty();
