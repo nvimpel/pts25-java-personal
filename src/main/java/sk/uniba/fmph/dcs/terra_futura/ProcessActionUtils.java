@@ -9,6 +9,8 @@ import java.util.Optional;
 
 final class ProcessActionUtils {
 
+    private ProcessActionUtils() {}
+
     /** Kontrola platnosti efektu karty. */
     public static boolean isEffectValid(
             final Card card,
