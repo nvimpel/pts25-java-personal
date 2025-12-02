@@ -199,6 +199,9 @@ public class Game implements TerraFuturaInterface {
 
     @Override
     public boolean selectActivationPattern(int playerId, int card) {
+        if(state != GameState.SelectActivationPattern){
+            return false;
+        }
         if(card != 1 && card != 2){
             return false;
         }

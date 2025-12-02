@@ -150,4 +150,41 @@ public class GameIntegrationTests {
     }
 
     // TODO FLOW OF GAME
+    @Test
+    public void flow_of_game_is_correct() {
+        Game game = newGame();
+
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if(i==0 && j==0){
+                    continue;
+                }
+                for (int p = 1; p <= 2; p++) {
+                    game.takeCard(p, new CardSource(Deck.I, 2), new GridPosition(i, j));
+                    game.turnFinished(p);
+                }
+            }
+        }
+        assertEquals(GameState.SelectActivationPattern, game.getState());
+
+        boolean wrongPlayerActivation = game.selectActivationPattern(2,2);
+        assertFalse("Tento hrac nie je na tahu",wrongPlayerActivation);
+
+        boolean correctActivation = game.selectActivationPattern(1,2);
+        assertTrue(correctActivation);
+        assertEquals(GameState.ActivateCard, game.getState());
+
+        boolean wrongActivation = game.selectActivationPattern(1,2);
+        assertFalse("Najskor musi vyriesit aktivovane karty",wrongActivation);
+
+        boolean wrongPlayerFinish = game.turnFinished(2);
+        assertFalse("Nespravny hrac nemoze ukoncit tah",wrongPlayerFinish);
+
+        game.turnFinished(1);
+        correctActivation = game.selectActivationPattern(1,2);
+        assertTrue(correctActivation);
+        game.turnFinished(1);
+
+        //prechod na druheho hraca
+    }
 }
