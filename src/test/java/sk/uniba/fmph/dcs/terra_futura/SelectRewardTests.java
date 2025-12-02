@@ -2,8 +2,6 @@ package sk.uniba.fmph.dcs.terra_futura;
 
 import org.junit.Before;
 import org.junit.Test;
-import sk.uniba.fmph.dcs.terra_futura.Card;
-import sk.uniba.fmph.dcs.terra_futura.SelectReward;
 import sk.uniba.fmph.dcs.terra_futura.enums.Resource;
 import sk.uniba.fmph.dcs.terra_futura.interfaces.Effect;
 
@@ -54,7 +52,7 @@ public class SelectRewardTests {
 
         List<Resource> onCard = card.resourcesOnCard();
         assertEquals(1, onCard.size());
-        assertEquals(Resource.Green, onCard.get(0));
+        assertEquals(Resource.Green, onCard.getFirst());
     }
 
     @Test
