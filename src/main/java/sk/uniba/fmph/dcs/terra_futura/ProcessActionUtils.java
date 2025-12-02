@@ -9,8 +9,51 @@ import java.util.Optional;
 
 final class ProcessActionUtils {
 
+    private ProcessActionUtils() {}
+
+    /** Kontrola platnosti efektu karty. */
+    public static boolean isEffectValid(
+            final Card card,
+            final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs,
+            final List<Resource> outputs,
+            final List<GridPosition> pollution
+    ) {
+        List<Resource> inputResources = inputs.stream().map(AbstractMap.SimpleEntry::getKey).toList();
+        return card.checkUpper(inputResources, outputs, pollution.size())
+                || card.checkLower(inputResources, outputs, pollution.size());
+    }
+
+    /** Spracovanie akcie karty. */
+    public static boolean processCardAction(
+            final Card card,
+            final GridPosition cardPosition,
+            final Grid grid,
+            final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs,
+            final List<Resource> outputs,
+            final List<GridPosition> pollution
+    ) {
+        boolean wasRemoveValid = removeResources(grid, inputs);
+        if (!wasRemoveValid) {
+            return false;
+        }
+
+        try {
+            card.putResources(outputs);
+        } catch (RuntimeException e) {
+            return false;
+        }
+
+        boolean wasPollutionValid = placePollution(grid, pollution);
+        if (!wasPollutionValid) {
+            return false;
+        }
+
+        grid.setActivated(cardPosition);
+        return true;
+    }
+
     /** Odobranie vstupných zdrojov. */
-    public static boolean removeResources(
+    private static boolean removeResources(
             final Grid grid,
             final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs
         ) {
@@ -34,7 +77,7 @@ final class ProcessActionUtils {
     }
 
     /** Uloženie pollution. */
-    public static boolean placePollution(
+    private static boolean placePollution(
             final Grid grid,
             final List<GridPosition> pollutionPositions
     ) {
