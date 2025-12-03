@@ -45,6 +45,9 @@ final class ProcessActionUtils {
             final List<AbstractMap.SimpleEntry<Resource, GridPosition>> inputs,
             final List<Resource> outputs,
             final List<GridPosition> pollution) {
+        if (!grid.canBeActivated(cardPosition)) {
+            return false;
+        }
         boolean wasRemoveValid = removeResources(grid, inputs);
         if (!wasRemoveValid) {
             return false;
@@ -61,11 +64,9 @@ final class ProcessActionUtils {
             return false;
         }
 
-        if (grid.canBeActivated(cardPosition)) {
-            grid.setActivated(cardPosition);
-            return true;
-        }
-        return false;
+
+        grid.setActivated(cardPosition);
+        return true;
     }
 
     /** Odobranie vstupných zdrojov.
