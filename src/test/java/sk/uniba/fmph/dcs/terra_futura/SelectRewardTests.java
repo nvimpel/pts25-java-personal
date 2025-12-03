@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class SelectRewardTests {
 
-    // Minimal Effect implementation
+    // Implemetacia miniamlneho potrebneho efektu
     private static class FakeEffect implements Effect {
         @Override public boolean check(List<Resource> input, List<Resource> output, int pollution) { return false; }
         @Override public boolean hasAssistance() { return false; }
@@ -26,7 +26,7 @@ public class SelectRewardTests {
     public void setUp() {
         selectReward = new SelectReward();
 
-        // pollutionSpaces = 3 → card stays "clear"
+
         card = new Card(
                 Optional.of(new FakeEffect()),
                 Optional.of(new FakeEffect()),
@@ -59,7 +59,7 @@ public class SelectRewardTests {
     public void testSelectRewardNotAllowedDoesNothing() {
         selectReward.setReward(1, card, List.of(Resource.Green));
 
-        selectReward.selectReward(Resource.Gear); // not allowed
+        selectReward.selectReward(Resource.Gear); // nie je to povolene
 
         assertTrue(card.resourcesOnCard().isEmpty());
     }
