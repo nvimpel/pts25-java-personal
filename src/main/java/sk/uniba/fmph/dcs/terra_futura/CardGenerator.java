@@ -44,9 +44,7 @@ import java.util.Random;
  * 1x: 2x money -> whatever product + pollution
  **/
 
-//----------------------------
-//Nie je cele implementovane, generujeme aspon par kariet aby nam zbehly testy
-//----------------------------
+
 final class CardGenerator {
     private CardGenerator() {
         throw new AssertionError("PileGenerator instances forbidden!");
@@ -70,7 +68,7 @@ final class CardGenerator {
         Collection<GridPosition> pattern = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
-            pattern.add(new GridPosition(random.nextInt() % 3 -1, random.nextInt() % 3 -1));
+            pattern.add(new GridPosition(random.nextInt() % 3 - 1, random.nextInt() % 3 - 1));
         }
         return new ActivationPattern(grid, pattern);
     }

@@ -322,7 +322,7 @@ public final class Game implements TerraFuturaInterface {
         return totalPoints;
     }
 
-    //info-getters
+    //info-gettery
 
     public GameState getState() {
         return state;

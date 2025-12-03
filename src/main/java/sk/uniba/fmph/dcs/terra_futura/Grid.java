@@ -64,13 +64,13 @@ public class Grid implements InterfaceActivateGrid {
         }
 
 
-        //add to activable
+        //pridaj do aktivovatelnych
         activable.add(coordinate);
-        //update to new grid size
+        //update velkosti gridu
         updateBounds(coordinate);
-        //add card to grid
+        //pridaj kartu
         grid.get(coordinate.x() + GRID_OFFSET).set(coordinate.y() + GRID_OFFSET, card);
-        //set activable to all card in same row and column
+        //nastva aktivovatelne vsetkym susedom
         setActivableNeighbours(coordinate);
 
     }

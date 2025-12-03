@@ -17,10 +17,6 @@
              files="[/\\]src"/>
     <suppress checks="DesignForExtension"
               files="[/\\]src"/>
-    <suppress files=".*Grid\.java" checks=".*" />
-    <suppress files=".*Pile\.java" checks=".*" />
-    <suppress files=".*Game\.java" checks=".*" />
-    <suppress files=".*SelectReward\.java" checks=".*" />
-    <suppress files=".*TerraFuturaInterface\.java" checks=".*" />
+    <suppress files=".*CardGenerator\.java" checks=".*" />
 
 </suppressions>
