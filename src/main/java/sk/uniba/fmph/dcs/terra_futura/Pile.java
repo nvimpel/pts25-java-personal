@@ -52,10 +52,11 @@ public class Pile {
     }
 
     public Optional<Card> getCard(final int index) {
-        if (index < 0 || index >= visible.size()) {
+        if (index < 0 || index > visible.size()) {
             return Optional.empty();
         }
-        return Optional.of(visible.get(index));
+        if (index == 0) return Optional.of(pile.getFirst());
+        return Optional.of(visible.get(index - 1));
     }
 
 
@@ -63,10 +64,10 @@ public class Pile {
         if (index == 0 && !pile.isEmpty()) {
             return pile.removeFirst();
         }
-        if (getCard(index).isEmpty()) {
+        if (getCard(index - 1).isEmpty()) {
             throw new NoSuchElementException();
         }
-        Card card = visible.remove(index);
+        Card card = visible.remove(index - 1);
         addCard();
         return card;
 
